@@ -101,6 +101,7 @@ initialisation:
 				    ; Bit 2 : flag for luminosity task
 				    ; Bit 3 : flag to enable write
 				    ; Bit 4 : flag to store data
+				    ; Bit 5 : flag to compute next data to send
 
     counter    EQU 21h
 
@@ -133,6 +134,10 @@ initialisation:
     movlb    04h
     movlw    00000000B
     movwf    flash_status
+    movwf    next_data
+    movwf    next_address_byte1
+    movwf    next_address_byte2
+    movwf    next_address_byte3
     return
 
 ;INTERRUPT ROUTINES
@@ -157,22 +162,19 @@ spi_completion:
     goto     write_data
     btfsc    flash_status, 5
     goto     start_program
-    ; TODO
+    ; TODO (read operation)
+    bsf	     task_flags, 6	    ; Launch clear tasks
 
 write_data:
-    movlb    04h
+    ; movlb    04h
     movf     next_data, 0
     movwf    SSP1BUF
-    btfsc    flash_status, 2
-    goto     write_address_2
-    btfsc    flash_status, 3
-    goto     write_address_3
-    btfsc    flash_status, 4
+    movlb    00h
+    bsf	     task_flags, 5
 
 start_program:
-    banksel  PORTA
-    
-
+    bsf	     task_flags, 4	    ; Enable store_data task
+    return
 
 timer1_handler:
     bcf	     PIR1, 0                ; Reset interrupt notification bit
@@ -233,6 +235,12 @@ main_loop:
     movlb    00h
     btfsc    task_flags, 4
     call     store_data
+    movlb    00h
+    btfsc    task_flags, 5
+    call     compute_next_data
+    movlb    00h
+    btfsc    task_flags, 6
+    call     clear_flash
     goto     main_loop
     
 get_temp:
@@ -276,29 +284,79 @@ get_luminosity:
     bsf	     ADCON0, 1		    ; Set ADC Conversion Status bit
 				    ; to start conversion
     movlb    00h
+    bsf	     task_flags, 3
     bcf	     task_flags, 2
     return
 
+wait_acquisition:		    ; Wait for acquisition (6 us)
+    nop
+    return
+
+; Flash module operations
 enable_write:
     banksel  PORTA
     bcf	     PORTA, 5		    ; Select flash
     banksel  SSP1BUF
     movlw    06h		    ; WRITE ENABLE instruction code
     movwf    SSP1BUF
+    bsf	     flash_status, 5	    ; Tell that a PROGRAM isntruction have to be done next
     bcf	     task_flags, 3
     return
     
     
 store_data:
     banksel  PORTA
+    bsf	     PORTA, 5		    ; Deselect flash module to apply WRITE ENABLED COMMAND
+    nop
+    nop
+    nop
+    ; TODO? : Wait for the slave deselect to be seen  by the flash memory ?
     bcf	     PORTA, 5		    ; Select flash
     banksel  SSP1BUF
-    movlw
+    movlw    02h		    ; PROGRAM command
+    movwf    SSP1BUF
+    bsf	     flash_status, 0	    ; Tell that there is still something to send
+    bsf	     flash_status, 3	    ; Set flag to send the first address byte next
+    bsf	     task_flags, 5	    ; Enable task that compute the next data
+    bcf	     task_flags, 4
+    return
+
+compute_next_data:
+    movlb    00h
+    bcf	     task_flags, 5	    ; Clear flag for all computation
     movlb    04h
-    bsf	     flash_status, 1	    ; Set flag to send the first address byte next
+    btfsc    flash_status, 1
+    goto     address_byte1
+    btfsc    flash_status, 2
+    goto     address_byte2
+    btfsc    flash_status, 3
+    goto     address_byte3
+    ; TODO : Aller chercher les valeurs dans temp, humid, ...
+    bcf	     flash_status, 0	    ; Nothing left to send
     return
-    
-    
-wait_acquisition:		    ; Wait for acquisition (6 us)
-    nop
+
+address_byte1:
+    movf     next_address_byte1, 0
+    movwf    next_data
+    bcf	     flash_status, 1
+    bsf	     flash_status, 4
     return
+
+address_byte2:
+    movf     next_address_byte2, 0
+    movwf    next_data
+    bcf	     flash_status, 2
+    bsf	     flash_status, 1
+    return
+
+address_byte3:
+    movf     next_address_byte3, 0
+    movwf    next_data
+    bcf	     flash_status, 3
+    bsf	     flash_status, 2
+    return
+
+clear_flash:
+    banksel  PORTA
+    bsf	     PORTA, 5			; Deselect flash
+    ; TODO: Increment next_address (!! sur 3 byte)
