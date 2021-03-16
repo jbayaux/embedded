@@ -20,21 +20,21 @@
 ; Assembly source line config statements
 
 
-# 1 "D:\\MPLABX XC8\\pic\\include\\xc.inc" 1 3
+# 1 "/opt/microchip/xc8/v2.31/pic/include/xc.inc" 1 3
 
 
 
 
 
 
-# 1 "D:\\MPLABX XC8\\pic\\include\\pic.inc" 1 3
+# 1 "/opt/microchip/xc8/v2.31/pic/include/pic.inc" 1 3
 
 
 
-# 1 "D:\\MPLABX XC8\\pic\\include\\pic_as_chip_select.inc" 1 3
-# 1800 "D:\\MPLABX XC8\\pic\\include\\pic_as_chip_select.inc" 3
-# 1 "D:\\MPLABX XC8\\pic\\include\\proc\\pic16f1789.inc" 1 3
-# 48 "D:\\MPLABX XC8\\pic\\include\\proc\\pic16f1789.inc" 3
+# 1 "/opt/microchip/xc8/v2.31/pic/include/pic_as_chip_select.inc" 1 3
+# 1800 "/opt/microchip/xc8/v2.31/pic/include/pic_as_chip_select.inc" 3
+# 1 "/opt/microchip/xc8/v2.31/pic/include/proc/pic16f1789.inc" 1 3
+# 48 "/opt/microchip/xc8/v2.31/pic/include/proc/pic16f1789.inc" 3
 INDF0 equ 0000h
 
 INDF0_INDF0_POSN equ 0000h
@@ -10227,7 +10227,7 @@ TOSH_TOSH_POSITION equ 0000h
 TOSH_TOSH_SIZE equ 0007h
 TOSH_TOSH_LENGTH equ 0007h
 TOSH_TOSH_MASK equ 007Fh
-# 11829 "D:\\MPLABX XC8\\pic\\include\\proc\\pic16f1789.inc" 3
+# 11829 "/opt/microchip/xc8/v2.31/pic/include/proc/pic16f1789.inc" 3
 psect udata_shr,class=COMMON,space=1,noexec
 psect udata,class=RAM,space=1,noexec
 psect udata_bank0,class=BANK0,space=1,noexec
@@ -10259,9 +10259,8 @@ psect udata_bank25,class=BANK25,space=1,noexec
 psect code,class=CODE,space=0,delta=2
 psect data,class=STRCODE,space=0,delta=2,noexec
 psect edata,class=EEDATA,space=3,delta=2,noexec
-# 1800 "D:\\MPLABX XC8\\pic\\include\\pic_as_chip_select.inc" 2 3
-# 4 "D:\\MPLABX XC8\\pic\\include\\pic.inc" 2 3
-
+# 1801 "/opt/microchip/xc8/v2.31/pic/include/pic_as_chip_select.inc" 2 3
+# 5 "/opt/microchip/xc8/v2.31/pic/include/pic.inc" 2 3
 
 
 
@@ -10305,7 +10304,7 @@ addfsr FSR1,stk_offset
 stk_offset SET 0
 auto_size SET 0
 ENDM
-# 7 "D:\\MPLABX XC8\\pic\\include\\xc.inc" 2 3
+# 8 "/opt/microchip/xc8/v2.31/pic/include/xc.inc" 2 3
 # 4 "./config.inc" 2
 
 ; CONFIG1
@@ -10429,7 +10428,7 @@ timer1_handler:
     return
 
     bsf task_flags, 0 ; Start task for temp measurement
-    movlw 0Ah
+    movlw 1Ah
     movwf counter
     return
 
@@ -10501,7 +10500,7 @@ get_humidity:
 
     movlw 00101101B ; ADC enabled and AN11 selected as source
     movwf ADCON0
-    ;call wait_acquisition
+    call wait_acquisition
     bsf ADCON0, 1 ; Set ADC Conversion Status bit
         ; to start conversion
     movlb 00h
