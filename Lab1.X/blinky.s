@@ -96,14 +96,17 @@ initialisation:
     
     ; Declare variables in GPRs
     ; In Bank 0
-    task_flags EQU 20h		    ; Bit 0 : flag for temp task
+    task_flags   EQU 20h	    ; Bit 0 : flag for temp task
 				    ; Bit 1 : flag for humidity task
 				    ; Bit 2 : flag for luminosity task
 				    ; Bit 3 : flag to enable write
 				    ; Bit 4 : flag to store data
 				    ; Bit 5 : flag to compute next data to send
+				    ; Bit 6 : flag to clear transmission with flash
+    task_flags2  EQU 21h	    ; Bit 0 : flag to read data
+				    ; Bit 1 : flag to use read data
 
-    counter    EQU 21h
+    counter	 EQU 22h
 
     ; In Bank 1
     TEMPL EQU 20h
@@ -118,18 +121,26 @@ initialisation:
 				    ; Bit 1 : Address byte 1
 				    ; Bit 2 : Address byte 2
 				    ; Bit 3 : Address byte 3
-				    ; Bit 4 : Value
-				    ; Bit 5 : PROGRAM command
+				    ; Bit 4 : PROGRAM command
+				    ; Bit 5 : Luminosity
+				    ; Bit 6 : Humidity
+				    ; Bit 7 : Light
     next_data		EQU 21h
     next_address_byte1	EQU 22h
     next_address_byte2	EQU 23h
     next_address_byte3	EQU 24h
+    flash_status2	EQU 25h	    ; Bit 0 : High or low part of data, 0 means "high"
+				    ; Bit 1 : Read enabled
+				    ; Bit 2 : Next data is bullshit
+
+    flash_data	        EQU 26h	    ; Data read on the flash memory
     
     ; Initialise variables
     movlb    00h
     movlw    00000000B
     movwf    task_flags
-    movlw    0Ah
+    movwf    task_flags2
+    movlw    10h
     movwf    counter
     movlb    04h
     movlw    00000000B
@@ -138,6 +149,8 @@ initialisation:
     movwf    next_address_byte1
     movwf    next_address_byte2
     movwf    next_address_byte3
+    movwf    flash_status2
+    movwf    flash_data
     return
 
 ;INTERRUPT ROUTINES
@@ -160,10 +173,13 @@ spi_completion:
     movlb    04h
     btfsc    flash_status, 0
     goto     write_data
-    btfsc    flash_status, 5
+    btfsc    flash_status2, 1
+    goto     save_data
+    btfsc    flash_status, 4
     goto     start_program
-    ; TODO (read operation)
-    bsf	     task_flags, 6	    ; Launch clear tasks
+    movlb    00h
+    bsf	     task_flags, 6	    ; Launch clear task
+    return
 
 write_data:
     ; movlb    04h
@@ -171,8 +187,17 @@ write_data:
     movwf    SSP1BUF
     movlb    00h
     bsf	     task_flags, 5
+    return
 
+save_data:
+    movlb    00h
+    bsf	     task_flags2, 1
+    return
+    
+    
 start_program:
+    bcf	     flash_status, 4
+    movlb    00h
     bsf	     task_flags, 4	    ; Enable store_data task
     return
 
@@ -182,7 +207,7 @@ timer1_handler:
     return
     
     bsf	     task_flags, 0	    ; Start task for temp measurement
-    movlw    1Ah
+    movlw    11h
     movwf    counter
     return
     
@@ -241,6 +266,13 @@ main_loop:
     movlb    00h
     btfsc    task_flags, 6
     call     clear_flash
+    movlb    00h
+    btfsc    task_flags2, 0
+    call     read_data
+    movlb    00h
+    btfsc    task_flags2, 1
+    call     use_data
+
     goto     main_loop
     
 get_temp:
@@ -299,8 +331,10 @@ enable_write:
     banksel  SSP1BUF
     movlw    06h		    ; WRITE ENABLE instruction code
     movwf    SSP1BUF
-    bsf	     flash_status, 5	    ; Tell that a PROGRAM isntruction have to be done next
+    bsf	     flash_status, 4	    ; Tell that a PROGRAM instruction have to be done next
+    movlb    00h
     bcf	     task_flags, 3
+    movf     task_flags, 0
     return
     
     
@@ -317,21 +351,34 @@ store_data:
     movwf    SSP1BUF
     bsf	     flash_status, 0	    ; Tell that there is still something to send
     bsf	     flash_status, 3	    ; Set flag to send the first address byte next
+    movlb    00h
     bsf	     task_flags, 5	    ; Enable task that compute the next data
     bcf	     task_flags, 4
     return
 
 compute_next_data:
-    movlb    00h
-    bcf	     task_flags, 5	    ; Clear flag for all computation
+    ; movlb    00h
+    bcf	     task_flags, 5
     movlb    04h
+    btfsc    flash_status2, 1
+    goto     compute_next_data_read
+    goto     compute_next_data_write
+    
+compute_next_data_write:
+    ; movlb    04h
     btfsc    flash_status, 1
     goto     address_byte1
     btfsc    flash_status, 2
     goto     address_byte2
     btfsc    flash_status, 3
     goto     address_byte3
-    ; TODO : Aller chercher les valeurs dans temp, humid, ...
+    btfsc    flash_status, 5
+    goto     temperature
+    btfsc    flash_status, 6
+    goto     humidity
+    ; btfsc    flash_status, 7
+    ; goto     luminosity
+
     bcf	     flash_status, 0	    ; Nothing left to send
     return
 
@@ -339,7 +386,7 @@ address_byte1:
     movf     next_address_byte1, 0
     movwf    next_data
     bcf	     flash_status, 1
-    bsf	     flash_status, 4
+    bsf	     flash_status, 5
     return
 
 address_byte2:
@@ -356,7 +403,150 @@ address_byte3:
     bsf	     flash_status, 2
     return
 
+temperature:
+    btfss    flash_status2, 0
+    goto     temperature_high
+    bcf	     flash_status2, 0		; Tell that next part to send is the high
+    movlb    01h
+    movf     TEMPL, 0
+    movlb    04h
+    movwf    next_data
+    bcf	     flash_status, 5
+    bsf	     flash_status, 6
+    return
+
+temperature_high:
+    bsf	     flash_status2, 0		; Tell that next part to send is the low one
+    movlb    01h
+    movf     TEMPH, 0
+    movlb    04h
+    movwf    next_data
+    return
+
+humidity:
+    btfss    flash_status2, 0
+    goto     humidity_high
+    bcf	     flash_status2, 0		; Tell that next part to send is the high one
+    movlb    01h
+    movf     HUML, 0
+    movlb    04h
+    movwf    next_data
+    bcf	     flash_status, 6
+    bsf	     flash_status, 7
+    return
+
+humidity_high:
+    bsf	     flash_status2, 0		; Tell that next part to send is the low one
+    movlb    01h
+    movf     HUMH, 0
+    movlb    04h
+    movwf    next_data
+    return
+
+luminosity:
+    btfss    flash_status2, 0
+    goto     luminosity_high
+    bcf	     flash_status2, 0		; Tell that next part to send is the high one
+    movlb    01h
+    movf     LUML, 0
+    movlb    04h
+    movwf    next_data
+    bcf	     flash_status, 7
+    return
+
+luminosity_high:
+    bsf	     flash_status2, 0		; Tell that next part to send is the low one
+    movlb    01h
+    movf     LUMH, 0
+    movlb    04h
+    movwf    next_data
+    return
+
 clear_flash:
-    banksel  PORTA
+    movlb    00h
+    bcf	     task_flags, 6
     bsf	     PORTA, 5			; Deselect flash
-    ; TODO: Increment next_address (!! sur 3 byte)
+    movlb    04h
+    btfsc    flash_status2, 2		; If read operation enabled
+    return
+
+    movlw    08h
+    addwf    next_address_byte1, 1
+    movlw    00h
+    ; If the addition leads to an overflow, the Carry bit is set to 1
+    ; 'addwfc' add the carry to the result of the next addition
+    addwfc   next_address_byte2, 1
+    addwfc   next_address_byte3, 1
+    movlb    00h
+    bsf	     task_flags2, 0		; TO REMOVE !!!
+    return
+
+read_data:
+    ; TODO: Check whether there is something to read or not
+    bcf	     task_flags2, 0
+    bcf	     PORTA, 5		    ; Select flash
+    movlb    04h
+    bsf	     flash_status2, 1	    ; Enable read
+    movlw    03h		    ; READ command
+    movwf    SSP1BUF
+    bsf	     flash_status, 0	    ; Tell that there is still something to send
+    bsf	     flash_status, 3	    ; Set flag to send the first address byte next
+    movlb    00h
+    bsf	     task_flags, 5	    ; Compute next data to write
+    return
+
+compute_next_data_read:
+    movlb    04h
+    btfsc    flash_status, 1
+    goto     address_byte1_read
+    btfsc    flash_status, 2
+    goto     address_byte2_read 
+    btfsc    flash_status, 3
+    goto     address_byte3_read
+    btfsc    flash_status, 5
+    goto     address_sent
+    return
+
+address_byte1_read:
+    movlw    00h		    ; TODO: Change this
+    movwf    next_data
+    bcf	     flash_status, 1
+    bsf	     flash_status, 5	    ; Next SPI completion means that we will start to read
+    return
+
+address_byte2_read:
+    movlw    00h		    ; TODO: Change this
+    movwf    next_data
+    bcf	     flash_status, 2
+    bsf	     flash_status, 1
+    return
+
+address_byte3_read:
+    movlw    00h		    ; TODO: Change this
+    movwf    next_data
+    bcf	     flash_status, 3
+    bsf	     flash_status, 2
+    return
+
+address_sent:
+    bcf	     flash_status, 5
+    bcf	     flash_status, 0	    ; Nothing left to send
+    return
+
+use_data:
+    bcf	     task_flags2, 1
+    ; TODO: Increment address_read
+    movlb    04h
+    btfsc    flash_status2, 2
+    goto     bullshit_data
+    
+    ; TODO: Send data from SSP1BUF into Bluetooth but !!timing
+    movf     SSP1BUF, 0
+    
+    ; TODO: If address_read = address write
+    bcf	     flash_status2, 1	    ; Disabled read in flash status
+    return
+
+bullshit_data:
+    bcf	     flash_status2, 2	    ; Data is not bullshit anymore
+    return
