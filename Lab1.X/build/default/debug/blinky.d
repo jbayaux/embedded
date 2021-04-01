@@ -1,1 +1,1 @@
-build/default/debug\blinky.i: blinky.s config.inc
+build/default/debug/blinky.i: blinky.s config.inc
