@@ -1,0 +1,313 @@
+
+
+Microchip MPLAB XC8 Assembler V2.32 build 20210201212658 
+                                                                                                           Mon Apr 12 17:36:09 2021
+
+
+     1                           	processor	16F1789
+     2                           	pagewidth 132
+     3                           	psect	udata_shr,global,class=COMMON,space=1,delta=1,noexec
+     4                           	psect	udata,global,class=RAM,space=1,delta=1,noexec
+     5                           	psect	udata_bank0,global,class=BANK0,space=1,delta=1,noexec
+     6                           	psect	udata_bank1,global,class=BANK1,space=1,delta=1,noexec
+     7                           	psect	udata_bank2,global,class=BANK2,space=1,delta=1,noexec
+     8                           	psect	udata_bank3,global,class=BANK3,space=1,delta=1,noexec
+     9                           	psect	udata_bank4,global,class=BANK4,space=1,delta=1,noexec
+    10                           	psect	udata_bank5,global,class=BANK5,space=1,delta=1,noexec
+    11                           	psect	udata_bank6,global,class=BANK6,space=1,delta=1,noexec
+    12                           	psect	udata_bank7,global,class=BANK7,space=1,delta=1,noexec
+    13                           	psect	udata_bank8,global,class=BANK8,space=1,delta=1,noexec
+    14                           	psect	udata_bank9,global,class=BANK9,space=1,delta=1,noexec
+    15                           	psect	udata_bank10,global,class=BANK10,space=1,delta=1,noexec
+    16                           	psect	udata_bank11,global,class=BANK11,space=1,delta=1,noexec
+    17                           	psect	udata_bank12,global,class=BANK12,space=1,delta=1,noexec
+    18                           	psect	udata_bank13,global,class=BANK13,space=1,delta=1,noexec
+    19                           	psect	udata_bank14,global,class=BANK14,space=1,delta=1,noexec
+    20                           	psect	udata_bank15,global,class=BANK15,space=1,delta=1,noexec
+    21                           	psect	udata_bank16,global,class=BANK16,space=1,delta=1,noexec
+    22                           	psect	udata_bank17,global,class=BANK17,space=1,delta=1,noexec
+    23                           	psect	udata_bank18,global,class=BANK18,space=1,delta=1,noexec
+    24                           	psect	udata_bank19,global,class=BANK19,space=1,delta=1,noexec
+    25                           	psect	udata_bank20,global,class=BANK20,space=1,delta=1,noexec
+    26                           	psect	udata_bank21,global,class=BANK21,space=1,delta=1,noexec
+    27                           	psect	udata_bank22,global,class=BANK22,space=1,delta=1,noexec
+    28                           	psect	udata_bank23,global,class=BANK23,space=1,delta=1,noexec
+    29                           	psect	udata_bank24,global,class=BANK24,space=1,delta=1,noexec
+    30                           	psect	udata_bank25,global,class=BANK25,space=1,delta=1,noexec
+    31                           	psect	code,global,class=CODE,delta=2
+    32                           	psect	data,global,class=STRCODE,delta=2,noexec
+    33                           	psect	edata,global,class=EEDATA,space=3,delta=2,noexec
+    34                           	psect	text,global,abs,class=CODE,delta=2
+    35                           	psect	config,global,abs,ovrld,class=CONFIG,space=4,delta=2,noexec
+    36                           	psect	pa_nodes0,global,class=CODE,delta=2
+    37                           
+    38                           ; *********************************************************** ;
+    39                           ; Flash Test ;
+    40                           ; Test a flash module by reading its status registers ;
+    41                           ; ;
+    42                           ; INFO0064 - Embedded Systems - Lab 2 ;
+    43                           ; Antoine Malherbe - Chloé Preud'Homme         ;
+    44                           ; Jérôme Bayaux - Tom Piron ;
+    45                           ; ;
+    46                           ; *********************************************************** ;
+    47                           ; Assembly source line config statements
+    48  007F                     
+    49                           	psect	edata
+    50  0000                     stk_offset	set	0
+    51  0000                     auto_size	set	0
+    52                           
+    53                           ; stack_auto defines a symbol /name/_offset which equates to the
+    54                           ; stack offset of the auto object in question
+    55  0000                     
+    56                           ; stack_param defines a symbol /name/_offset which equates to the
+    57                           ; stack offset of the parameter object in question
+    58  0000                     
+    59                           ; alloc_stack adjusts the SP to allocate space for auto objects
+    60                           ; it also links in to the btemp symbol so that can be used
+    61  0000                     
+    62                           ; restore_stack adjusts the SP to remove all auto and parameter
+    63                           ; objects from the stack prior to returning from a function
+    64  0000                     	; Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
+    65                           
+    66                           	psect	text
+    67                           
+    68                           ; CONFIG1
+    69                           ; CONFIG2
+    70                           ;#define value_counter 05h
+    71                           ; That is where the MCU will start executing the program (0x00)
+    72  0000                     	org	0
+    73  0000  2805               	goto	start	; jump to the beginning of the code
+    74                           
+    75                           ; That is where the MCU will jump when an interrupt occur (0x04)
+    76  0004                     	org	4
+    77  0004  282F               	goto	interrupt_routines	; jump to the interrupt routine
+    78  0005                     start:	
+    79                           ;BEGINNING OF THE PROGRAM
+    80                           
+    81  0005  2007               	call	initialisation	; initialisation routine configuring the MCU
+    82  0006  284D               	goto	main_loop	; main loop
+    83  0007                     initialisation:	
+    84                           ;INITIALISATION
+    85                           
+    86  0007  3002               	movlw	2	; Enable Serial port pins, ((SSP1CON1) and 07Fh), 4 bit to 1 and SCK freq = F_osc / 64
+    87                           
+    88                           ; Configuration of Flash modules pins
+    89  0008  0021               	banksel	140
+    90  0009  128C               	bcf	140,5	; Set ~SS pin to output mode
+    91  000A  118E               	bcf	142,3	; Set SCK pin to ouptut mode
+    92  000B  128E               	bcf	142,5	; Set SDO pin to output mode
+    93  000C  160E               	bsf	142,4	; Set SDI pin to input mode
+    94  000D  120F               	bcf	143,4	; Set ((PORTD) and 07Fh), 4 pin to output (SPI HLD)
+    95  000E  128F               	bcf	143,5	; Set ((PORTD) and 07Fh), 5 pin to output (SPI WP)
+    96                           
+    97                           ; Configuration of SPI module
+    98                           ; SCK frequency
+    99                           ; Default = 00000010B
+   100                           ; Custom = 00001010B
+   101  000F  0095               	movwf	533
+   102  0010  308F               	movlw	143	; Set SCK frequency to F_osc / (143 + 1) / 4
+   103  0011  0092               	movwf	530
+   104  0012  306E               	movlw	110
+   105  0013  0024               	banksel	532
+   106  0014  1314               	bcf	532,6	; Set ((SSP1STAT) and 07Fh), 6 bit to 0 (Clock Edge for SPI)
+   107  0015  1615               	bsf	533,4	; Set ((SSP1CON1) and 07Fh), 4 bit to 1 (Clock polarity for SPI)
+   108  0016  1695               	bsf	533,5	; Enable Serial port pins
+   109  0017  0020               	banksel	15
+   110  0018  120F               	bcf	15,4	; Set ~HLD signal to 1
+   111  0019  128F               	bcf	15,5	; Set ~WP signal to 1
+   112  001A  168C               	bsf	12,5	; Initialize ~SS to 1
+   113                           
+   114                           ; Configuration of inetrnal clock
+   115  001B  0021               	banksel	153
+   116  001C  0099               	movwf	153	; 4MHz frequency with the internal oscillator
+   117  001D  3031               	movlw	49
+   118  001E  0198               	clrf	152	; No tuning of the frequency
+   119                           
+   120                           ; Configuration of Timer1
+   121                           ; Tune it to trigger interrupt every 5 sec
+   122  001F  0020               	banksel	24
+   123  0020  0098               	movwf	24	; Enable timer1 with instruction clock as
+   124                           
+   125                           ; source and prescale of 1:8
+   126                           ; Frequency = (4MHz/4)/8 = 0.125MHz
+   127                           ; Set interrupts on timer 1 and ADC
+   128  0021  30C0               	movlw	192
+   129  0022  008B               	movwf	11	; Enable interrupts and peripheral interrupts
+   130  0023  3049               	movlw	73
+   131  0024  0021               	banksel	145
+   132  0025  0091               	movwf	145	; Enable timer1, ADC and SPI interrupts
+   133                           
+   134                           ; Declare variables in GPRs
+   135                           ; In Bank 0
+   136  0020                     	; Bit 0 : clear_flash
+   137                           
+   138                           ; Bit 1 : write_enable
+   139                           ; Bit 2 : read_status1
+   140                           ; Bit 3 : read_status2
+   141  0022                     
+   142                           ; In Bank 4
+   143  0021                     	; Number of spi_completion to wait before reading data
+   144                           
+   145                           ; Initialise variables
+   146  0026  0020               	movlb	0
+   147  0027  3010               	movlw	16
+   148  0028  01A0               	clrf	32
+   149  0029  01A1               	clrf	33
+   150  002A  00A2               	movwf	34
+   151  002B  0024               	movlb	4
+   152  002C  3000               	movlw	0
+   153  002D  01A1               	clrf	33
+   154  002E  0008               	return
+   155  002F                     interrupt_routines:	
+   156                           ;INTERRUPT ROUTINES
+   157                           
+   158  002F  0020               	banksel	17
+   159  0030  1991               	btfsc	17,3
+   160  0031  2036               	call	spi_completion
+   161                           
+   162                           ; If the previous interrupt routines performs a banksel inside, we must set the bank again to look a
+      +                          t PIR1
+   163  0032  0020               	banksel	17
+   164  0033  1811               	btfsc	17,0
+   165  0034  2040               	call	timer1_handler	; Call handler if timer1 interrupt bit set
+   166  0035  0009               	retfie
+   167  0036                     spi_completion:
+   168  0036  1191               	bcf	17,3
+   169  0037  0024               	movlb	4
+   170  0038  0BA1               	decfsz	33,f
+   171  0039  283D               	goto	refresh_buf
+   172  003A  0020               	movlb	0
+   173  003B  1420               	bsf	32,0	; Launch clear task
+   174  003C  0008               	return
+   175  003D                     refresh_buf:
+   176  003D  0811               	movf	529,w
+   177  003E  0091               	movwf	529
+   178  003F  0008               	return
+   179  0040                     timer1_handler:
+   180  0040  1011               	bcf	17,0	; Reset interrupt notification bit
+   181  0041  0BA2               	decfsz	34,f
+   182  0042  0008               	return
+   183  0043  1821               	btfsc	33,0
+   184  0044  2849               	goto	enable_next_task
+   185  0045  3010               	movlw	16	; Start measurements only every ?? sec
+   186  0046  14A0               	bsf	32,1	; Start recurrent task
+   187                           
+   188                           ; Bit 1 : Write enable
+   189                           ; Bit 2 : Read status 1
+   190                           ; Bit 3 : Read status 2
+   191  0047  00A2               	movwf	34
+   192  0048  0008               	return
+   193  0049                     enable_next_task:
+   194  0049  3012               	movlw	18
+   195  004A  1520               	bsf	32,2
+   196  004B  00A2               	movwf	34
+   197  004C  0008               	return
+   198  004D                     main_loop:	
+   199                           ;MAIN LOOP
+   200                           
+   201  004D  0020               	movlb	0
+   202  004E  1820               	btfsc	32,0
+   203  004F  205A               	call	clear_flash
+   204  0050  0020               	movlb	0
+   205  0051  18A0               	btfsc	32,1
+   206  0052  205D               	call	enable_write
+   207  0053  0020               	movlb	0
+   208  0054  1920               	btfsc	32,2
+   209  0055  2065               	call	read_status1
+   210  0056  0020               	movlb	0
+   211  0057  19A0               	btfsc	32,3
+   212  0058  206D               	call	read_status2
+   213  0059  284D               	goto	main_loop
+   214  005A                     clear_flash:	
+   215                           ; Flash module operations
+   216                           
+   217  005A  1020               	bcf	32,0
+   218  005B  168C               	bsf	12,5	; Deselect flash
+   219  005C  0008               	return
+   220  005D                     enable_write:
+   221  005D  3006               	movlw	6	; WRITE ENABLE instruction code
+   222  005E  10A0               	bcf	32,1
+   223  005F  128C               	bcf	12,5	; Select flash
+   224  0060  0024               	banksel	529
+   225  0061  0091               	movwf	529	; send_instruction
+   226  0062  3001               	movlw	1
+   227  0063  00A1               	movwf	33	; 1 bit exchanged
+   228  0064  0008               	return
+   229  0065                     read_status1:
+   230  0065  3005               	movlw	5	; Register Status
+   231  0066  1120               	bcf	32,2
+   232  0067  128C               	bcf	12,5
+   233  0068  0024               	banksel	529
+   234  0069  0091               	movwf	529
+   235  006A  3002               	movlw	2	; 2 bits exchanged
+   236  006B  00A1               	movwf	33
+   237  006C  0008               	return
+   238  006D                     read_status2:
+   239  006D  3070               	movlw	112	; Flag Status
+   240  006E  11A0               	bcf	32,3
+   241  006F  128C               	bcf	12,5
+   242  0070  0024               	banksel	529
+   243  0071  0091               	movwf	529
+   244  0072  3003               	movlw	3	; 3 bits exchanged
+   245  0073  00A1               	movwf	33
+   246  0074  0008               	return
+   247                           
+   248                           	psect	config
+   249                           
+   250                           ;Config register CONFIG1 @ 0x8007
+   251                           ;	Oscillator Selection
+   252                           ;	FOSC = INTOSC, INTOSC oscillator: I/O function on CLKIN pin
+   253                           ;	Watchdog Timer Enable
+   254                           ;	WDTE = OFF, WDT disabled
+   255                           ;	Power-up Timer Enable
+   256                           ;	PWRTE = OFF, PWRT disabled
+   257                           ;	MCLR Pin Function Select
+   258                           ;	MCLRE = OFF, MCLR/VPP pin function is digital input
+   259                           ;	Flash Program Memory Code Protection
+   260                           ;	CP = OFF, Program memory code protection is disabled
+   261                           ;	Data Memory Code Protection
+   262                           ;	CPD = OFF, Data memory code protection is disabled
+   263                           ;	Brown-out Reset Enable
+   264                           ;	BOREN = ON, Brown-out Reset enabled
+   265                           ;	Clock Out Enable
+   266                           ;	CLKOUTEN = OFF, CLKOUT function is disabled. I/O or oscillator function on the CLKOUT pin
+   267                           ;	Internal/External Switchover
+   268                           ;	IESO = ON, Internal/External Switchover mode is enabled
+   269                           ;	Fail-Safe Clock Monitor Enable
+   270                           ;	FCMEN = ON, Fail-Safe Clock Monitor is enabled
+   271  8007                     	org	32775
+   272  8007  3FA4               	dw	16292
+   273                           
+   274                           ;Config register CONFIG2 @ 0x8008
+   275                           ;	Flash Memory Self-Write Protection
+   276                           ;	WRT = OFF, Write protection off
+   277                           ;	Voltage Regulator Capacitor Enable bit
+   278                           ;	VCAPEN = OFF, Vcap functionality is disabled on RA6.
+   279                           ;	PLL Enable
+   280                           ;	PLLEN = OFF, 4x PLL disabled
+   281                           ;	Stack Overflow/Underflow Reset Enable
+   282                           ;	STVREN = ON, Stack Overflow or Underflow will cause a Reset
+   283                           ;	Brown-out Reset Voltage Selection
+   284                           ;	BORV = LO, Brown-out Reset Voltage (Vbor), low trip point selected.
+   285                           ;	Low Power Brown-Out Reset Enable Bit
+   286                           ;	LPBOR = OFF, Low power brown-out is disabled
+   287                           ;	Low-Voltage Programming Enable
+   288                           ;	LVP = OFF, High-voltage on MCLR/VPP must be used for programming
+   289  8008                     	org	32776
+   290  8008  1EFF               	dw	7935
+
+
+Microchip Technology PIC Macro Assembler V2.32 build 20210201212658 
+Symbol Table                                                                                               Mon Apr 12 17:36:09 2021
+
+                            PIE1 0091                              PIR1 0011                              next 0021  
+                           T1CON 0018                             PORTA 000C                             PORTD 000F  
+                           TRISA 008C                             TRISC 008E                             TRISD 008F  
+                           start 0005                            INTCON 000B                            OSCCON 0099  
+                  spi_completion 0036                           OSCTUNE 0098                           SSP1ADD 0212  
+                         SSP1BUF 0211                           counter 0022                      read_status1 0065  
+                    read_status2 006D                          SSP1CON1 0215                          SSP1STAT 0214  
+                enable_next_task 0049                       clear_flash 005A                       refresh_buf 003D  
+                      data_count 0021                interrupt_routines 002F                    timer1_handler 0040  
+                      task_flags 0020                         main_loop 004D                    initialisation 0007  
+                    enable_write 005D  

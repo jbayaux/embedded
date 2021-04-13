@@ -20,21 +20,21 @@
 ; Assembly source line config statements
 
 
-# 1 "/opt/microchip/xc8/v2.31/pic/include/xc.inc" 1 3
+# 1 "/opt/microchip/xc8/v2.32/pic/include/xc.inc" 1 3
 
 
 
 
 
 
-# 1 "/opt/microchip/xc8/v2.31/pic/include/pic.inc" 1 3
+# 1 "/opt/microchip/xc8/v2.32/pic/include/pic.inc" 1 3
 
 
 
-# 1 "/opt/microchip/xc8/v2.31/pic/include/pic_as_chip_select.inc" 1 3
-# 1800 "/opt/microchip/xc8/v2.31/pic/include/pic_as_chip_select.inc" 3
-# 1 "/opt/microchip/xc8/v2.31/pic/include/proc/pic16f1789.inc" 1 3
-# 48 "/opt/microchip/xc8/v2.31/pic/include/proc/pic16f1789.inc" 3
+# 1 "/opt/microchip/xc8/v2.32/pic/include/pic_as_chip_select.inc" 1 3
+# 1810 "/opt/microchip/xc8/v2.32/pic/include/pic_as_chip_select.inc" 3
+# 1 "/opt/microchip/xc8/v2.32/pic/include/proc/pic16f1789.inc" 1 3
+# 48 "/opt/microchip/xc8/v2.32/pic/include/proc/pic16f1789.inc" 3
 INDF0 equ 0000h
 
 INDF0_INDF0_POSN equ 0000h
@@ -10227,7 +10227,7 @@ TOSH_TOSH_POSITION equ 0000h
 TOSH_TOSH_SIZE equ 0007h
 TOSH_TOSH_LENGTH equ 0007h
 TOSH_TOSH_MASK equ 007Fh
-# 11829 "/opt/microchip/xc8/v2.31/pic/include/proc/pic16f1789.inc" 3
+# 11829 "/opt/microchip/xc8/v2.32/pic/include/proc/pic16f1789.inc" 3
 psect udata_shr,class=COMMON,space=1,noexec
 psect udata,class=RAM,space=1,noexec
 psect udata_bank0,class=BANK0,space=1,noexec
@@ -10259,8 +10259,8 @@ psect udata_bank25,class=BANK25,space=1,noexec
 psect code,class=CODE,space=0,delta=2
 psect data,class=STRCODE,space=0,delta=2,noexec
 psect edata,class=EEDATA,space=3,delta=2,noexec
-# 1801 "/opt/microchip/xc8/v2.31/pic/include/pic_as_chip_select.inc" 2 3
-# 5 "/opt/microchip/xc8/v2.31/pic/include/pic.inc" 2 3
+# 1811 "/opt/microchip/xc8/v2.32/pic/include/pic_as_chip_select.inc" 2 3
+# 5 "/opt/microchip/xc8/v2.32/pic/include/pic.inc" 2 3
 
 
 
@@ -10304,7 +10304,7 @@ addfsr FSR1,stk_offset
 stk_offset SET 0
 auto_size SET 0
 ENDM
-# 8 "/opt/microchip/xc8/v2.31/pic/include/xc.inc" 2 3
+# 8 "/opt/microchip/xc8/v2.32/pic/include/xc.inc" 2 3
 # 4 "./config.inc" 2
 
 ; CONFIG1
@@ -10328,7 +10328,7 @@ ENDM
   CONFIG LPBOR = OFF ; Low Power Brown-Out Reset Enable Bit (Low power brown-out is disabled)
   CONFIG LVP = OFF ; Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
 # 16 "blinky.s" 2
- ;#define value_counter 05h
+
 
     PSECT text, abs, class=CODE, delta=2
 
@@ -10357,7 +10357,7 @@ initialisation:
     bsf ANSELB, 4 ; Set input mode of ((PORTB) and 07Fh), 4 to analog
     banksel WPUA
     bcf WPUA, 0 ; Disable weak pull-up on ((PORTA) and 07Fh), 0
-    ;bcf WPUA, 1 ; Disable weak pull-up on ((PORTA) and 07Fh), 1
+    ; bcf WPUA, 1 ; Disable weak pull-up on ((PORTA) and 07Fh), 1
     bcf WPUB, 4 ; Disable weak pull-up on ((PORTB) and 07Fh), 4
 
     ; Configuration of ADC
@@ -10381,11 +10381,14 @@ initialisation:
     bcf SSP1STAT, 6 ; Set ((SSP1STAT) and 07Fh), 6 bit to 0 (Clock Edge for SPI)
     ; bsf SSP1CON1, 4 ; Set ((SSP1CON1) and 07Fh), 4 bit to 1 (Clock polarity for SPI)
     ; bsf SSP1CON1, 5 ; Enable Serial port pins
-    movlw 00110010B ; Enable Serial port pins, ((SSP1CON1) and 07Fh), 4 bit to 1 and SCK freq = F_osc / 64
+    movlw 00111010B ; Enable Serial port pins, ((SSP1CON1) and 07Fh), 4 bit to 1 and SCK freq = F_osc / 64
     movwf SSP1CON1
+    movlw 8fh ; Set SCK frequency to F_osc / (31 + 1) / 4
+    movwf SSP1ADD
     banksel PORTD
-    bsf PORTD, 4 ; Set ~HLD signal to 1
-    bsf PORTD, 5 ; Set ~WP signal to 1
+    bcf PORTD, 4 ; Set ~HLD signal to 1
+    bcf PORTD, 5 ; Set ~WP signal to 1
+    bsf PORTA, 5 ; Initialize ~SS to 1
 
     ; Configuration of clock
     banksel OSCCON
@@ -10412,14 +10415,14 @@ initialisation:
     ; Declare variables in GPRs
     ; In Bank 0
     task_flags EQU 20h ; Bit 0 : flag for temp task
-        ; Bit 1 : flag for humidity task
-        ; Bit 2 : flag for luminosity task
-        ; Bit 3 : flag to enable write
-        ; Bit 4 : flag to store data
-        ; Bit 5 : flag to compute next data to send
-        ; Bit 6 : flag to clear transmission with flash
+                                    ; Bit 1 : flag for humidity task
+                                    ; Bit 2 : flag for luminosity task
+                                    ; Bit 3 : flag to enable write
+                                    ; Bit 4 : flag to store data
+                                    ; Bit 5 : flag to compute next data to send
+                                    ; Bit 6 : flag to clear transmission with flash
     task_flags2 EQU 21h ; Bit 0 : flag to read data
-        ; Bit 1 : flag to use read data
+                                    ; Bit 1 : flag to use read data
 
     counter EQU 22h
 
@@ -10433,22 +10436,21 @@ initialisation:
 
     ; In Bank 4
     flash_status EQU 20h ; Bit 0 : Still something to send
-        ; Bit 1 : Address byte 1
-        ; Bit 2 : Address byte 2
-        ; Bit 3 : Address byte 3
-        ; Bit 4 : PROGRAM command
-        ; Bit 5 : Luminosity
-        ; Bit 6 : Humidity
-        ; Bit 7 : Light
+                                    ; Bit 1 : Address byte 1
+                                    ; Bit 2 : Address byte 2
+                                    ; Bit 3 : Address byte 3
+                                    ; Bit 4 : PROGRAM command
+                                    ; Bit 5 : Luminosity
+                                    ; Bit 6 : Humidity
+                                    ; Bit 7 : Light
+
     next_data EQU 21h
     next_address_byte1 EQU 22h
     next_address_byte2 EQU 23h
     next_address_byte3 EQU 24h
     flash_status2 EQU 25h ; Bit 0 : High or low part of data, 0 means "high"
-        ; Bit 1 : Read enabled
-        ; Bit 2 : Next data is bullshit
-
-    flash_data EQU 26h ; Data read on the flash memory
+                                    ; Bit 1 : Read enabled
+                                    ; Bit 2 : Next data is bullshit
 
     ; Initialise variables
     movlb 00h
@@ -10460,12 +10462,11 @@ initialisation:
     movlb 04h
     movlw 00000000B
     movwf flash_status
+    movwf flash_status2
     movwf next_data
     movwf next_address_byte1
     movwf next_address_byte2
     movwf next_address_byte3
-    movwf flash_status2
-    movwf flash_data
     return
 
 ;INTERRUPT ROUTINES
@@ -10473,40 +10474,41 @@ interrupt_routines:
     banksel PIR1
     btfsc PIR1, 3
     call spi_completion
-    ; If the previous interrupt routines performs a banksel inside, we must set the bank again to look at PIR1
+    ; If the previous interrupt routines performs a banksel inside,
+    ; we must set the bank again to look at PIR1
     banksel PIR1
     btfsc PIR1, 0
     call timer1_handler ; Call handler if timer1 interrupt bit set
     banksel PIR1
     btfsc PIR1, 6
     call adc_completion
-    ;movlb 00h ; Put this if other checks on registers of Bank 0 appear after
     retfie
 
 spi_completion:
     bcf PIR1, 3
     movlb 04h
     btfsc flash_status, 0
-    goto write_data
+    goto write_data ; Copy next data to send into the buffer for immediate transmission
     btfsc flash_status2, 1
-    goto save_data
+    goto save_data ; Save what has been read by the SPI module and relaunch a data cycle
     btfsc flash_status, 4
-    goto start_program
+    goto start_program ; Start sending data to write in memory
     movlb 00h
     bsf task_flags, 6 ; Launch clear task
     return
 
 write_data:
-    ; movlb 04h
     movf next_data, 0
     movwf SSP1BUF
     movlb 00h
-    bsf task_flags, 5
+    bsf task_flags, 5 ; Compute next data to send
     return
 
 save_data:
+    movf SSP1BUF, 0
+    movwf SSP1BUF ; Relaunch a data cycle
     movlb 00h
-    bsf task_flags2, 1
+    bsf task_flags2, 1 ; Use the extracted data
     return
 
 
@@ -10522,8 +10524,8 @@ timer1_handler:
     return
 
     bsf task_flags, 0 ; Start task for temp measurement
-    movlw 11h
-    movwf counter
+    movlw 10h
+    movwf counter ; Reset timer counter
     return
 
 adc_completion:
@@ -10587,9 +10589,9 @@ main_loop:
     movlb 00h
     btfsc task_flags2, 1
     call use_data
-
     goto main_loop
 
+; Sensor data colection
 get_temp:
     banksel ADCON0
     btfsc ADCON0, 1 ; Test if ADC already used
@@ -10599,10 +10601,10 @@ get_temp:
     movwf ADCON0
     call wait_acquisition
     bsf ADCON0, 1 ; Set ADC Conversion Status bit
-        ; to start conversion
+                                    ; to start conversion
     movlb 00h
-    bsf task_flags, 1
     bcf task_flags, 0
+    bsf task_flags, 1
     return
 
 get_humidity:
@@ -10614,10 +10616,10 @@ get_humidity:
     movwf ADCON0
     call wait_acquisition
     bsf ADCON0, 1 ; Set ADC Conversion Status bit
-        ; to start conversion
+                                    ; to start conversion
     movlb 00h
-    bsf task_flags, 2
     bcf task_flags, 1
+    bsf task_flags, 2
     return
 
 get_luminosity:
@@ -10625,14 +10627,14 @@ get_luminosity:
     btfsc ADCON0, 1 ; Test if ADC already used
     return
 
-    ;movlw 00000101B ; ADC enabled and AN1 selected as source
-    ;movwf ADCON0
+    ; movlw 00000101B ; ADC enabled and AN1 selected as source
+    ; movwf ADCON0
     call wait_acquisition
     bsf ADCON0, 1 ; Set ADC Conversion Status bit
-        ; to start conversion
+                                    ; to start conversion
     movlb 00h
-    bsf task_flags, 3
     bcf task_flags, 2
+    bsf task_flags, 3
     return
 
 wait_acquisition: ; Wait for acquisition (6 us)
@@ -10641,19 +10643,21 @@ wait_acquisition: ; Wait for acquisition (6 us)
 
 ; Flash module operations
 enable_write:
+; Send a WRITE ENABLE instruction to the flash
+    bcf task_flags, 3
     banksel PORTA
     bcf PORTA, 5 ; Select flash
     banksel SSP1BUF
     movlw 06h ; WRITE ENABLE instruction code
     movwf SSP1BUF
     bsf flash_status, 4 ; Tell that a PROGRAM instruction have to be done next
-    movlb 00h
-    bcf task_flags, 3
-    movf task_flags, 0
+    ; movlb 00h
+    ; movf task_flags, 0 ; Why ??
     return
 
-
 store_data:
+; Store the last measurement on the flash memory
+    ; TODO? This in clear_flash ? + Launch the task if cleared
     banksel PORTA
     bsf PORTA, 5 ; Deselect flash module to apply WRITE ENABLED COMMAND
     nop
@@ -10667,12 +10671,12 @@ store_data:
     bsf flash_status, 0 ; Tell that there is still something to send
     bsf flash_status, 3 ; Set flag to send the first address byte next
     movlb 00h
-    bsf task_flags, 5 ; Enable task that compute the next data
+    bsf task_flags, 5 ; Compute what to send next
     bcf task_flags, 4
     return
 
 compute_next_data:
-    ; movlb 00h
+; Compute which byte should be sent next and store it in next_data
     bcf task_flags, 5
     movlb 04h
     btfsc flash_status2, 1
@@ -10680,7 +10684,6 @@ compute_next_data:
     goto compute_next_data_write
 
 compute_next_data_write:
-    ; movlb 04h
     btfsc flash_status, 1
     goto address_byte1
     btfsc flash_status, 2
@@ -10721,7 +10724,7 @@ address_byte3:
 temperature:
     btfss flash_status2, 0
     goto temperature_high
-    bcf flash_status2, 0 ; Tell that next part to send is the high
+    bcf flash_status2, 0 ; Tell that next byte to send is the high one
     movlb 01h
     movf TEMPL, 0
     movlb 04h
@@ -10731,7 +10734,7 @@ temperature:
     return
 
 temperature_high:
-    bsf flash_status2, 0 ; Tell that next part to send is the low one
+    bsf flash_status2, 0 ; Tell that next byte to send is the low one
     movlb 01h
     movf TEMPH, 0
     movlb 04h
@@ -10741,7 +10744,7 @@ temperature_high:
 humidity:
     btfss flash_status2, 0
     goto humidity_high
-    bcf flash_status2, 0 ; Tell that next part to send is the high one
+    bcf flash_status2, 0 ; Tell that next byte to send is the high one
     movlb 01h
     movf HUML, 0
     movlb 04h
@@ -10751,7 +10754,7 @@ humidity:
     return
 
 humidity_high:
-    bsf flash_status2, 0 ; Tell that next part to send is the low one
+    bsf flash_status2, 0 ; Tell that next byte to send is the low one
     movlb 01h
     movf HUMH, 0
     movlb 04h
@@ -10761,7 +10764,7 @@ humidity_high:
 luminosity:
     btfss flash_status2, 0
     goto luminosity_high
-    bcf flash_status2, 0 ; Tell that next part to send is the high one
+    bcf flash_status2, 0 ; Tell that next byte to send is the high one
     movlb 01h
     movf LUML, 0
     movlb 04h
@@ -10770,44 +10773,11 @@ luminosity:
     return
 
 luminosity_high:
-    bsf flash_status2, 0 ; Tell that next part to send is the low one
+    bsf flash_status2, 0 ; Tell that next byte to send is the low one
     movlb 01h
     movf LUMH, 0
     movlb 04h
     movwf next_data
-    return
-
-clear_flash:
-    movlb 00h
-    bcf task_flags, 6
-    bsf PORTA, 5 ; Deselect flash
-    movlb 04h
-    btfsc flash_status2, 2 ; If read operation enabled
-    return
-
-    movlw 08h
-    addwf next_address_byte1, 1
-    movlw 00h
-    ; If the addition leads to an overflow, the Carry bit is set to 1
-    ; 'addwfc' add the carry to the result of the next addition
-    addwfc next_address_byte2, 1
-    addwfc next_address_byte3, 1
-    movlb 00h
-    bsf task_flags2, 0 ; TO REMOVE !!!
-    return
-
-read_data:
-    ; TODO: Check whether there is something to read or not
-    bcf task_flags2, 0
-    bcf PORTA, 5 ; Select flash
-    movlb 04h
-    bsf flash_status2, 1 ; Enable read
-    movlw 03h ; READ command
-    movwf SSP1BUF
-    bsf flash_status, 0 ; Tell that there is still something to send
-    bsf flash_status, 3 ; Set flag to send the first address byte next
-    movlb 00h
-    bsf task_flags, 5 ; Compute next data to write
     return
 
 compute_next_data_read:
@@ -10823,23 +10793,23 @@ compute_next_data_read:
     return
 
 address_byte1_read:
-    movlw 00h ; TODO: Change this
-    movwf next_data
     bcf flash_status, 1
+    movlw 00h ; TODO: Retrieve the next read address 1
+    movwf next_data
     bsf flash_status, 5 ; Next SPI completion means that we will start to read
     return
 
 address_byte2_read:
-    movlw 00h ; TODO: Change this
-    movwf next_data
     bcf flash_status, 2
+    movlw 00h ; TODO: Retrieve the next read address 2
+    movwf next_data
     bsf flash_status, 1
     return
 
 address_byte3_read:
-    movlw 00h ; TODO: Change this
-    movwf next_data
     bcf flash_status, 3
+    movlw 00h ; TODO: Retrieve the next read address 3
+    movwf next_data
     bsf flash_status, 2
     return
 
@@ -10848,7 +10818,49 @@ address_sent:
     bcf flash_status, 0 ; Nothing left to send
     return
 
+clear_flash:
+    movlb 00h
+    bcf task_flags, 6
+    bsf PORTA, 5 ; Deselect flash
+
+    ; If the flash was writing data, we need to increment the writing
+    ; address for the next write operation
+    movlb 04h
+    btfsc flash_status2, 2
+    return
+    goto update_next_address
+
+update_next_address:
+    movlw 08h
+    addwf next_address_byte1, 1
+    movlw 00h
+    ; If the addition leads to an overflow, the Carry bit is set to 1
+    ; 'addwfc' add the carry to the result of the next addition
+    addwfc next_address_byte2, 1
+    addwfc next_address_byte3, 1
+    movlb 00h
+    bsf task_flags2, 0 ; TO REMOVE !!! Trigger a read operation
+    return
+
+read_data:
+; Start a READ operation from the flash
+; Will be triggered by a connection from Bluetooth
+    ; TODO: Check whether there is something to read or not
+    bcf task_flags2, 0
+    bcf PORTA, 5 ; Select flash
+    movlb 04h
+    bsf flash_status2, 1 ; Enable read
+    movlw 03h ; READ command
+    movwf SSP1BUF
+    bsf flash_status, 0 ; Tell that there is still something to send
+    bsf flash_status, 3 ; Set flag to send the first address byte next
+    movlb 00h
+    bsf task_flags, 5 ; Compute next data to write
+    return
+
 use_data:
+; Data has been exchanged through SPI and now need to be read
+; Exchanged data can be found in SSP1BUF
     bcf task_flags2, 1
     ; TODO: Increment address_read
     movlb 04h
@@ -10859,7 +10871,7 @@ use_data:
     movf SSP1BUF, 0
 
     ; TODO: If address_read = address write
-    bcf flash_status2, 1 ; Disabled read in flash status
+    bcf flash_status2, 1 ; Disable read in flash status
     return
 
 bullshit_data:
