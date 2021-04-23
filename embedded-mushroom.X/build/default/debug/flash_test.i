@@ -10345,11 +10345,11 @@ start:
 ;INITIALISATION
 initialisation:
     ; Configuration of Flash modules pins
-    banksel TRISA
-    bcf TRISA, 5 ; Set ~SS pin to output mode
+    banksel TRISC
     bcf TRISC, 3 ; Set SCK pin to ouptut mode
     bcf TRISC, 5 ; Set SDO pin to output mode
     bsf TRISC, 4 ; Set SDI pin to input mode
+    bcf TRISD, 0 ; Set ~SS pin to ouptut mode
     bcf TRISD, 4 ; Set ((PORTD) and 07Fh), 4 pin to output (SPI HLD)
     bcf TRISD, 5 ; Set ((PORTD) and 07Fh), 5 pin to output (SPI WP)
 
@@ -10358,20 +10358,20 @@ initialisation:
     ; SCK frequency
     ; Default = 00000010B
     ; Custom = 00001010B
+    banksel SSP1CON1
     movlw 00000010B ; Enable Serial port pins, ((SSP1CON1) and 07Fh), 4 bit to 1 and SCK freq = F_osc / 64
     movwf SSP1CON1
     movlw 8fh ; Set SCK frequency to F_osc / (143 + 1) / 4
     movwf SSP1ADD
 
-    banksel SSP1STAT
     bcf SSP1STAT, 6 ; Set ((SSP1STAT) and 07Fh), 6 bit to 0 (Clock Edge for SPI)
     bsf SSP1CON1, 4 ; Set ((SSP1CON1) and 07Fh), 4 bit to 1 (Clock polarity for SPI)
     bsf SSP1CON1, 5 ; Enable Serial port pins
 
     banksel PORTD
-    bcf PORTD, 4 ; Set ~HLD signal to 1
-    bcf PORTD, 5 ; Set ~WP signal to 1
-    bsf PORTA, 5 ; Initialize ~SS to 1
+    bsf PORTD, 4 ; Set HLD signal to 1
+    bsf PORTD, 5 ; Set WP signal to 1
+    bsf PORTD, 0 ; Initialize ~SS to 1
 
     ; Configuration of internal clock
     banksel OSCCON
@@ -10444,8 +10444,6 @@ spi_completion:
 refresh_buf:
     movf SSP1BUF, 0
     movwf SSP1BUF
-    banksel PIR1
-    bsf PIR1, 3
     return
 
 timer1_handler:
@@ -10491,39 +10489,35 @@ main_loop:
 ; Flash module operations
 clear_flash:
     bcf task_flags, 0
-    bsf PORTA, 5 ; Deselect flash
+    bsf PORTD, 0 ; Deselect flash
     return
 
 enable_write:
     bcf task_flags, 1
-    bcf PORTA, 5 ; Select flash
+    bcf PORTD, 0 ; Select flash
     banksel SSP1BUF
     movlw 06h ; WRITE ENABLE instruction code
     movwf SSP1BUF ; send_instruction
     movlw 01h
     movwf data_count ; 1 bit exchanged
-    banksel PIR1
-    bsf PIR1, 3
     return
 
 read_status1:
     bcf task_flags, 2
-    bcf PORTA, 5
+    bcf PORTD, 0
     banksel SSP1BUF
-    movlw 05h ; Register Status
+    movlw 70h ; Register Status 05h, Flag status 70h
     movwf SSP1BUF
-    movlw 02h ; 2 bits exchanged
+    movlw 06h ; 2 bits exchanged
     movwf data_count
-    banksel PIR1
-    bsf PIR1, 3
     return
 
 read_status2:
     bcf task_flags, 3
-    bcf PORTA, 5
+    bcf PORTD, 0
     banksel SSP1BUF
-    movlw 70h ; Flag Status
+    movlw 0x70 ; Extended Status
     movwf SSP1BUF
-    movlw 03h ; 3 bits exchanged
+    movlw 06h ; 3 bits exchanged
     movwf data_count
     return
