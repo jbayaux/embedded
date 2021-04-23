@@ -11,6 +11,9 @@
 # All addresses and the length are given in unqualified hexadecimal
 # in delta units.  Any other numeric values are decimal.
 %PSECTS
+$build/default/debug/adc.o
+edata EEDATA 3 0 F000 6 2
+config CONFIG 4 8007 8007 2 2
 $build/default/debug/flash_test.o
 text CODE 0 0 0 7A 2
 config CONFIG 4 8007 8007 2 2
@@ -108,7 +111,7 @@ BANK24 C20-C6F 1
 BANK25 CA0-CBF 1
 BIGRAM 2000-27EF 1
 COMMON 70-7F 1
-EEDATA F000-F0FF 2
+EEDATA F006-F0FF 2
 STRCODE 7A-3FFF 2
 STRING 7A-3FFF 2
 # %LINETAB Section
@@ -125,127 +128,127 @@ STRING 7A-3FFF 2
 # All other numeric values are in decimal.
 %LINETAB
 $build/default/debug/flash_test.o
-0 text CODE >19:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-0 text CODE >20:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-1 text CODE >22:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4 text CODE >23:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-5 text CODE >27:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6 text CODE >28:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-7 text CODE >33:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-8 text CODE >34:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-9 text CODE >35:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-A text CODE >36:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-B text CODE >37:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-C text CODE >38:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-D text CODE >39:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-E text CODE >46:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-F text CODE >47:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-10 text CODE >48:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-11 text CODE >49:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-12 text CODE >50:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-13 text CODE >52:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-14 text CODE >53:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-15 text CODE >54:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-16 text CODE >56:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-17 text CODE >57:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-18 text CODE >58:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-19 text CODE >59:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-1A text CODE >62:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-1B text CODE >63:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-1C text CODE >64:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-1D text CODE >65:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-1E text CODE >66:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-1F text CODE >70:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-20 text CODE >71:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-21 text CODE >72:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-22 text CODE >77:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-23 text CODE >78:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-24 text CODE >79:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-25 text CODE >80:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-26 text CODE >81:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-27 text CODE >96:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-28 text CODE >97:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-29 text CODE >98:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-2A text CODE >99:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-2B text CODE >100:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-2C text CODE >101:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-2D text CODE >102:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-2E text CODE >103:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-2F text CODE >104:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-30 text CODE >105:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-31 text CODE >109:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-32 text CODE >110:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-33 text CODE >111:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-34 text CODE >114:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-35 text CODE >115:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-36 text CODE >116:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-37 text CODE >117:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-38 text CODE >120:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-39 text CODE >121:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-3A text CODE >122:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-3B text CODE >123:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-3C text CODE >124:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-3D text CODE >125:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-3E text CODE >126:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-3F text CODE >127:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-40 text CODE >130:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-41 text CODE >131:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-42 text CODE >132:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-43 text CODE >135:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-44 text CODE >136:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-45 text CODE >137:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-46 text CODE >139:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-47 text CODE >140:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-48 text CODE >142:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-49 text CODE >143:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4A text CODE >147:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4B text CODE >148:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4C text CODE >149:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4D text CODE >152:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4E text CODE >153:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4F text CODE >154:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-50 text CODE >155:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-51 text CODE >156:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-52 text CODE >160:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-53 text CODE >161:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-54 text CODE >162:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-55 text CODE >163:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-56 text CODE >164:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-57 text CODE >165:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-58 text CODE >166:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-59 text CODE >167:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-5A text CODE >168:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-5B text CODE >169:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-5C text CODE >170:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-5D text CODE >171:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-5E text CODE >172:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-5F text CODE >176:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-60 text CODE >177:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-61 text CODE >178:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-62 text CODE >181:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-63 text CODE >182:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-64 text CODE >183:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-65 text CODE >184:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-66 text CODE >185:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-67 text CODE >186:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-68 text CODE >187:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-69 text CODE >188:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6A text CODE >191:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6B text CODE >192:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6C text CODE >193:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6D text CODE >194:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6E text CODE >195:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6F text CODE >196:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-70 text CODE >197:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-71 text CODE >198:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-72 text CODE >201:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-73 text CODE >202:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-74 text CODE >203:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-75 text CODE >204:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-76 text CODE >205:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-77 text CODE >206:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-78 text CODE >207:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-79 text CODE >208:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+0 text CODE >19:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+0 text CODE >20:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+1 text CODE >22:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+4 text CODE >23:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+5 text CODE >27:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+6 text CODE >28:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+7 text CODE >33:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+8 text CODE >34:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+9 text CODE >35:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+A text CODE >36:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+B text CODE >37:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+C text CODE >38:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+D text CODE >39:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+E text CODE >46:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+F text CODE >47:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+10 text CODE >48:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+11 text CODE >49:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+12 text CODE >50:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+13 text CODE >52:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+14 text CODE >53:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+15 text CODE >54:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+16 text CODE >56:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+17 text CODE >57:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+18 text CODE >58:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+19 text CODE >59:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+1A text CODE >62:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+1B text CODE >63:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+1C text CODE >64:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+1D text CODE >65:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+1E text CODE >66:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+1F text CODE >70:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+20 text CODE >71:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+21 text CODE >72:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+22 text CODE >77:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+23 text CODE >78:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+24 text CODE >79:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+25 text CODE >80:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+26 text CODE >81:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+27 text CODE >96:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+28 text CODE >97:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+29 text CODE >98:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+2A text CODE >99:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+2B text CODE >100:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+2C text CODE >101:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+2D text CODE >102:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+2E text CODE >103:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+2F text CODE >104:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+30 text CODE >105:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+31 text CODE >109:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+32 text CODE >110:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+33 text CODE >111:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+34 text CODE >114:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+35 text CODE >115:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+36 text CODE >116:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+37 text CODE >117:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+38 text CODE >120:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+39 text CODE >121:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+3A text CODE >122:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+3B text CODE >123:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+3C text CODE >124:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+3D text CODE >125:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+3E text CODE >126:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+3F text CODE >127:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+40 text CODE >130:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+41 text CODE >131:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+42 text CODE >132:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+43 text CODE >135:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+44 text CODE >136:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+45 text CODE >137:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+46 text CODE >139:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+47 text CODE >140:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+48 text CODE >142:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+49 text CODE >143:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+4A text CODE >147:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+4B text CODE >148:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+4C text CODE >149:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+4D text CODE >152:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+4E text CODE >153:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+4F text CODE >154:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+50 text CODE >155:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+51 text CODE >156:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+52 text CODE >160:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+53 text CODE >161:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+54 text CODE >162:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+55 text CODE >163:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+56 text CODE >164:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+57 text CODE >165:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+58 text CODE >166:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+59 text CODE >167:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+5A text CODE >168:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+5B text CODE >169:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+5C text CODE >170:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+5D text CODE >171:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+5E text CODE >172:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+5F text CODE >176:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+60 text CODE >177:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+61 text CODE >178:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+62 text CODE >181:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+63 text CODE >182:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+64 text CODE >183:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+65 text CODE >184:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+66 text CODE >185:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+67 text CODE >186:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+68 text CODE >187:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+69 text CODE >188:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+6A text CODE >191:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+6B text CODE >192:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+6C text CODE >193:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+6D text CODE >194:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+6E text CODE >195:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+6F text CODE >196:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+70 text CODE >197:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+71 text CODE >198:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+72 text CODE >201:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+73 text CODE >202:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+74 text CODE >203:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+75 text CODE >204:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+76 text CODE >205:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+77 text CODE >206:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+78 text CODE >207:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
+79 text CODE >208:/home/amalherbe/hubic/Documents/Cours/M2/embedded/embedded/embedded-mushroom.X/flash_test.s
 # %SYMTAB Section
 # An enumeration of all symbols in the program.
 # The beginning of the section is indicated by %SYMTAB.
@@ -260,7 +263,7 @@ F text CODE >47:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 %SYMTAB
 __Hspace_0 7A 0 ABS 0 - -
 __Hspace_1 0 0 ABS 0 - -
-__Hspace_3 0 0 ABS 0 - -
+__Hspace_3 6 0 ABS 0 - -
 __Hspace_4 10010 0 ABS 0 - -
 __Hudata_bank0 0 0 ABS 0 udata_bank0 -
 __Hudata_bank1 0 0 ABS 0 udata_bank1 -
@@ -301,7 +304,7 @@ __Ldata 0 0 ABS 0 data -
 __Ltext 0 0 ABS 0 text -
 __S0 0 0 ABS 0 - -
 __S1 0 0 ABS 0 - -
-__S3 0 0 ABS 0 - -
+__S3 F006 0 ABS 0 - -
 __Ludata_bank10 0 0 ABS 0 udata_bank10 -
 __Ludata_bank11 0 0 ABS 0 udata_bank11 -
 __Ludata_bank12 0 0 ABS 0 udata_bank12 -
@@ -359,6 +362,7 @@ __Ludata_shr 0 0 ABS 0 udata_shr -
 # and size are in units of delta. The file address is in units of bytes.
 # All other numeric quantities are in decimal.
 %SEGMENTS
+edata 3 0 1E000 6 2
 # %NOTES Section
 # This section contains data of all the note-psects.  The beginning of the section
 # is indicated by %NOTES. The first line indicates the name and decimal

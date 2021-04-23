@@ -10328,6 +10328,42 @@ ENDM
   CONFIG LPBOR = OFF ; Low Power Brown-Out Reset Enable Bit (Low power brown-out is disabled)
   CONFIG LVP = OFF ; Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
 # 16 "blinky.s" 2
+# 1 "./adc.s" 1
+# 1 "./config.inc" 1
+; Assembly source line config statements
+
+
+
+; CONFIG1
+  CONFIG FOSC = INTOSC ; Oscillator Selection (INTOSC oscillator: I/O function on CLKIN pin)
+  CONFIG WDTE = OFF ; Watchdog Timer Enable (WDT disabled)
+  CONFIG PWRTE = OFF ; Power-up Timer Enable (PWRT disabled)
+  CONFIG MCLRE = OFF ; MCLR Pin Function Select (MCLR/VPP pin function is digital input)
+  CONFIG CP = OFF ; Flash Program Memory Code Protection (Program memory code protection is disabled)
+  CONFIG CPD = OFF ; Data Memory Code Protection (Data memory code protection is disabled)
+  CONFIG BOREN = ON ; Brown-out Reset Enable (Brown-out Reset enabled)
+  CONFIG CLKOUTEN = OFF ; Clock Out Enable (CLKOUT function is disabled. I/O or oscillator function on the CLKOUT pin)
+  CONFIG IESO = ON ; Internal/External Switchover (Internal/External Switchover mode is enabled)
+  CONFIG FCMEN = ON ; Fail-Safe Clock Monitor Enable (Fail-Safe Clock Monitor is enabled)
+
+; CONFIG2
+  CONFIG WRT = OFF ; Flash Memory Self-Write Protection (Write protection off)
+  CONFIG VCAPEN = OFF ; Voltage Regulator Capacitor Enable bit (Vcap functionality is disabled on ((PORTA) and 07Fh), 6 .)
+  CONFIG PLLEN = OFF ; PLL Enable (4x PLL disabled)
+  CONFIG STVREN = ON ; Stack Overflow/Underflow Reset Enable (Stack Overflow or Underflow will cause a Reset)
+  CONFIG BORV = LO ; Brown-out Reset Voltage Selection (Brown-out Reset Voltage (Vbor), low trip point selected.)
+  CONFIG LPBOR = OFF ; Low Power Brown-Out Reset Enable Bit (Low power brown-out is disabled)
+  CONFIG LVP = OFF ; Low-Voltage Programming Enable (High-voltage on MCLR/VPP must be used for programming)
+# 2 "./adc.s" 2
+
+init_adc:
+    banksel ADCON1
+    movlw 01000000B ; Frequency = Fosc/4, result as sign-magnitude
+    movwf ADCON1
+    movlw 00001111B ; Negative ref set to VSS
+    movwf ADCON2
+    return
+# 17 "blinky.s" 2
 
 
     PSECT text, abs, class=CODE, delta=2
@@ -10361,34 +10397,35 @@ initialisation:
     bcf WPUB, 4 ; Disable weak pull-up on ((PORTB) and 07Fh), 4
 
     ; Configuration of ADC
+    call init_adc
     banksel ADCON1
-    movlw 01000000B ; Frequency = Fosc/4, result as sign-magnitude
-    movwf ADCON1
-    movlw 00001111B ; Negative ref set to VSS
-    movwf ADCON2
+    ;movlw 01000000B ; Frequency = Fosc/4, result as sign-magnitude
+    ;movwf ADCON1
+    ;movlw 00001111B ; Negative ref set to VSS
+    ;movwf ADCON2
 
     ; Configuration of Flash modules pins
-    banksel TRISA
-    bcf TRISA, 5 ; Set ~SS pin to output mode
+    banksel TRISC
     bcf TRISC, 3 ; Set SCK pin to ouptut mode
     bcf TRISC, 5 ; Set SDO pin to output mode
     bsf TRISC, 4 ; Set SDI pin to input mode
+    bcf TRISD, 0 ; Set ((PORTD) and 07Fh), 0 pin to output (SPI SS)
     bcf TRISD, 4 ; Set ((PORTD) and 07Fh), 4 pin to output (SPI HLD)
     bcf TRISD, 5 ; Set ((PORTD) and 07Fh), 5 pin to output (SPI WP)
 
     ; Configuration of SPI module
-    banksel SSP1STAT
+    banksel SSP1CON1
+    movlw 00000010B
+    movwf SSP1CON1 ; Set SPI clock frequency to F_OSC / 64
+
     bcf SSP1STAT, 6 ; Set ((SSP1STAT) and 07Fh), 6 bit to 0 (Clock Edge for SPI)
-    ; bsf SSP1CON1, 4 ; Set ((SSP1CON1) and 07Fh), 4 bit to 1 (Clock polarity for SPI)
-    ; bsf SSP1CON1, 5 ; Enable Serial port pins
-    movlw 00111010B ; Enable Serial port pins, ((SSP1CON1) and 07Fh), 4 bit to 1 and SCK freq = F_osc / 64
-    movwf SSP1CON1
-    movlw 8fh ; Set SCK frequency to F_osc / (31 + 1) / 4
-    movwf SSP1ADD
+    bsf SSP1CON1, 4 ; Set ((SSP1CON1) and 07Fh), 4 bit to 1 (Clock polarity for SPI)
+    bsf SSP1CON1, 5 ; Enable Serial port pins
+
     banksel PORTD
-    bcf PORTD, 4 ; Set ~HLD signal to 1
-    bcf PORTD, 5 ; Set ~WP signal to 1
-    bsf PORTA, 5 ; Initialize ~SS to 1
+    bsf PORTD, 4 ; Set HLD signal to 1
+    bsf PORTD, 5 ; Set WP signal to 1
+    bsf PORTD, 0 ; Initialize ~SS to 1
 
     ; Configuration of clock
     banksel OSCCON
@@ -10505,7 +10542,7 @@ write_data:
     return
 
 save_data:
-    movf SSP1BUF, 0
+    movf SSP1BUF, 0 ; ?? Remove and send full bullshit ??
     movwf SSP1BUF ; Relaunch a data cycle
     movlb 00h
     bsf task_flags2, 1 ; Use the extracted data
@@ -10645,8 +10682,8 @@ wait_acquisition: ; Wait for acquisition (6 us)
 enable_write:
 ; Send a WRITE ENABLE instruction to the flash
     bcf task_flags, 3
-    banksel PORTA
-    bcf PORTA, 5 ; Select flash
+    banksel PORTD
+    bcf PORTD, 0 ; Select flash
     banksel SSP1BUF
     movlw 06h ; WRITE ENABLE instruction code
     movwf SSP1BUF
@@ -10658,13 +10695,13 @@ enable_write:
 store_data:
 ; Store the last measurement on the flash memory
     ; TODO? This in clear_flash ? + Launch the task if cleared
-    banksel PORTA
-    bsf PORTA, 5 ; Deselect flash module to apply WRITE ENABLED COMMAND
+    banksel PORTD
+    bsf PORTD, 0 ; Deselect flash module to apply WRITE ENABLED COMMAND
     nop
     nop
     nop
     ; TODO? : Wait for the slave deselect to be seen by the flash memory ?
-    bcf PORTA, 5 ; Select flash
+    bcf PORTD, 0 ; Select flash
     banksel SSP1BUF
     movlw 02h ; PROGRAM command
     movwf SSP1BUF
@@ -10819,9 +10856,8 @@ address_sent:
     return
 
 clear_flash:
-    movlb 00h
     bcf task_flags, 6
-    bsf PORTA, 5 ; Deselect flash
+    bsf PORTD, 0 ; Deselect flash
 
     ; If the flash was writing data, we need to increment the writing
     ; address for the next write operation
@@ -10847,7 +10883,7 @@ read_data:
 ; Will be triggered by a connection from Bluetooth
     ; TODO: Check whether there is something to read or not
     bcf task_flags2, 0
-    bcf PORTA, 5 ; Select flash
+    bcf PORTD, 0 ; Select flash
     movlb 04h
     bsf flash_status2, 1 ; Enable read
     movlw 03h ; READ command

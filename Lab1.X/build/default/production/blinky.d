@@ -1,1 +1,1 @@
-build/default/production/blinky.i: blinky.s config.inc
+build/default/production/blinky.i: blinky.s config.inc adc.s

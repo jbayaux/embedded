@@ -1,6 +1,6 @@
 __S0 0 0 ABS 0
 __S1 0 0 ABS 0
-__S3 0 0 ABS 0
+__S3 F006 0 ABS 0
 __Hudata_bank10 0 0 ABS 0
 __Ludata_bank10 0 0 ABS 0
 __Hudata_bank4 0 0 ABS 0
@@ -51,7 +51,7 @@ __Hudata_bank21 0 0 ABS 0
 __Ludata_bank21 0 0 ABS 0
 __Hudata_bank7 0 0 ABS 0
 __Ludata_bank7 0 0 ABS 0
-__Hspace_3 0 0 ABS 0
+__Hspace_3 6 0 ABS 0
 __Lspace_3 0 0 ABS 0
 __Hspace_4 10010 0 ABS 0
 __Lspace_4 0 0 ABS 0
@@ -76,6 +76,7 @@ __Ludata_bank9 0 0 ABS 0
 __Hudata_bank25 0 0 ABS 0
 __Ludata_bank25 0 0 ABS 0
 %segments
+edata 0 B EEDATA 1E000 3
 %locals
 build/default/debug/flash_test.o
 flash_test.s

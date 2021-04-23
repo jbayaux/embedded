@@ -53,27 +53,27 @@ initialisation:
     movwf    ADCON2
 
     ; Configuration of Flash modules pins
-    banksel  TRISA
-    bcf      TRISA, 5               ; Set ~SS pin to output mode
+    banksel  TRISC
     bcf      TRISC, 3               ; Set SCK pin to ouptut mode
     bcf      TRISC, 5               ; Set SDO pin to output mode
     bsf      TRISC, 4               ; Set SDI pin to input mode
+    bcf	     TRISD, 0		    ; Set RD0 pin to output (SPI SS)
     bcf      TRISD, 4               ; Set RD4 pin to output (SPI HLD)
     bcf      TRISD, 5               ; Set RD5 pin to output (SPI WP)
     
     ; Configuration of SPI module
-    banksel  SSP1STAT
+    banksel  SSP1CON1
+    movlw    00000010B
+    movwf    SSP1CON1		    ; Set SPI clock frequency to F_OSC / 64
+    
     bcf      SSP1STAT, 6            ; Set CKE bit to 0 (Clock Edge for SPI)
-    ; bsf      SSP1CON1, 4            ; Set CKP bit to 1 (Clock polarity for SPI)
-    ; bsf      SSP1CON1, 5            ; Enable Serial port pins
-    movlw    00111010B              ; Enable Serial port pins, CKP bit to 1 and SCK freq = F_osc / 64
-    movwf    SSP1CON1
-    movlw    8fh                    ; Set SCK frequency to F_osc / (31 + 1) / 4
-    movwf    SSP1ADD
+    bsf      SSP1CON1, 4            ; Set CKP bit to 1 (Clock polarity for SPI)
+    bsf      SSP1CON1, 5            ; Enable Serial port pins
+
     banksel  PORTD
-    bcf      PORTD, 4               ; Set ~HLD signal to 1
-    bcf      PORTD, 5               ; Set ~WP signal to 1
-    bsf      PORTA, 5               ; Initialize ~SS to 1
+    bsf      PORTD, 4               ; Set HLD signal to 1
+    bsf      PORTD, 5               ; Set WP signal to 1
+    bsf      PORTD, 0               ; Initialize ~SS to 1
 
     ; Configuration of clock
     banksel  OSCCON
@@ -134,8 +134,9 @@ initialisation:
     next_address_byte2    EQU 23h
     next_address_byte3    EQU 24h
     flash_status2         EQU 25h   ; Bit 0 : High or low part of data, 0 means "high"
-                                    ; Bit 1 : Read enabled
+                                    ; Bit 1 : Read mode
                                     ; Bit 2 : Next data is bullshit
+				    ; Bit 3 : Still something to read
     
     ; Initialise variables
     movlb    00h
@@ -172,11 +173,11 @@ interrupt_routines:
 spi_completion:
     bcf      PIR1, 3
     movlb    04h
-    btfsc    flash_status, 0
+    btfsc    flash_status, 0        ; If still something to send
     goto     write_data             ; Copy next data to send into the buffer for immediate transmission
-    btfsc    flash_status2, 1
+    btfsc    flash_status2, 3       ; If still something to read
     goto     save_data              ; Save what has been read by the SPI module and relaunch a data cycle
-    btfsc    flash_status, 4
+    btfsc    flash_status, 4        ; If write_enable was sent
     goto     start_program          ; Start sending data to write in memory
     movlb    00h
     bsf      task_flags, 6          ; Launch clear task
@@ -190,7 +191,7 @@ write_data:
     return
 
 save_data:
-    movf     SSP1BUF, 0
+    movf     SSP1BUF, 0		    ; ?? Remove and send full bullshit ??
     movwf    SSP1BUF                ; Relaunch a data cycle
     movlb    00h
     bsf      task_flags2, 1         ; Use the extracted data
@@ -330,8 +331,8 @@ wait_acquisition:                   ; Wait for acquisition (6 us)
 enable_write:
 ; Send a WRITE ENABLE instruction to the flash
     bcf      task_flags, 3
-    banksel  PORTA
-    bcf      PORTA, 5               ; Select flash
+    banksel  PORTD
+    bcf      PORTD, 0               ; Select flash
     banksel  SSP1BUF
     movlw    06h                    ; WRITE ENABLE instruction code
     movwf    SSP1BUF
@@ -343,13 +344,13 @@ enable_write:
 store_data:
 ; Store the last measurement on the flash memory
     ; TODO? This in clear_flash ? + Launch the task if cleared
-    banksel  PORTA
-    bsf      PORTA, 5               ; Deselect flash module to apply WRITE ENABLED COMMAND
+    banksel  PORTD
+    bsf      PORTD, 0               ; Deselect flash module to apply WRITE ENABLED COMMAND
     nop
     nop
     nop
     ; TODO? : Wait for the slave deselect to be seen by the flash memory ?
-    bcf      PORTA, 5               ; Select flash
+    bcf      PORTD, 0               ; Select flash
     banksel  SSP1BUF
     movlw    02h                    ; PROGRAM command
     movwf    SSP1BUF
@@ -466,6 +467,7 @@ luminosity_high:
     return
 
 compute_next_data_read:
+; store the n-th byte of the address to read
     movlb    04h
     btfsc    flash_status, 1
     goto     address_byte1_read
@@ -474,7 +476,7 @@ compute_next_data_read:
     btfsc    flash_status, 3
     goto     address_byte3_read
     btfsc    flash_status, 5
-    goto     address_sent
+    bcf	     flash_status, 0        ; Nothing left to send
     return
 
 address_byte1_read:
@@ -498,22 +500,21 @@ address_byte3_read:
     bsf      flash_status, 2
     return
 
-address_sent:
-    bcf      flash_status, 5
-    bcf      flash_status, 0        ; Nothing left to send
-    return
-
 clear_flash:
-    movlb    00h
     bcf      task_flags, 6
-    bsf      PORTA, 5               ; Deselect flash
+    bsf      PORTD, 0               ; Deselect flash
 
     ; If the flash was writing data, we need to increment the writing
     ; address for the next write operation
     movlb    04h
-    btfsc    flash_status2, 2
-    return
+    btfsc    flash_status2, 1
+    goto     clear_read
     goto     update_next_address
+
+clear_read:
+    bcf	     flash_status2, 1
+    ; TODO: Update read address
+    return
 
 update_next_address:
     movlw    08h
@@ -532,9 +533,10 @@ read_data:
 ; Will be triggered by a connection from Bluetooth
     ; TODO: Check whether there is something to read or not
     bcf      task_flags2, 0
-    bcf      PORTA, 5               ; Select flash
+    bcf      PORTD, 0               ; Select flash
     movlb    04h
-    bsf      flash_status2, 1       ; Enable read
+    bsf      flash_status2, 3       ; Tell that there is still something to read
+    bsf	     flash_status2, 1	    ; Set read mode
     movlw    03h                    ; READ command
     movwf    SSP1BUF
     bsf      flash_status, 0        ; Tell that there is still something to send
@@ -556,7 +558,7 @@ use_data:
     movf     SSP1BUF, 0
 
     ; TODO: If address_read = address write
-    bcf      flash_status2, 1       ; Disable read in flash status
+    bcf      flash_status2, 3       ; Tell that there is nothing left to read
     return
 
 bullshit_data:

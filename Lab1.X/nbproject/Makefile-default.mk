@@ -57,17 +57,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=blinky.s
+SOURCEFILES_QUOTED_IF_SPACED=blinky.s adc.s
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/blinky.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/blinky.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/blinky.o ${OBJECTDIR}/adc.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/blinky.o.d ${OBJECTDIR}/adc.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/blinky.o
+OBJECTFILES=${OBJECTDIR}/blinky.o ${OBJECTDIR}/adc.o
 
 # Source Files
-SOURCEFILES=blinky.s
+SOURCEFILES=blinky.s adc.s
 
 
 
@@ -102,6 +102,14 @@ ${OBJECTDIR}/blinky.o: blinky.s  nbproject/Makefile-${CND_CONF}.mk
 	blinky.s \
 	 -msummary=+mem,-psect,-class,-hex,-file,-sha1,-sha256,-xml,-xmlfull -fmax-errors=20 -mwarn=0 -xassembler-with-cpp
 	
+${OBJECTDIR}/adc.o: adc.s  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/adc.o 
+	${MP_AS} -mcpu=PIC16F1789 -c \
+	-o ${OBJECTDIR}/adc.o \
+	adc.s \
+	 -msummary=+mem,-psect,-class,-hex,-file,-sha1,-sha256,-xml,-xmlfull -fmax-errors=20 -mwarn=0 -xassembler-with-cpp
+	
 else
 ${OBJECTDIR}/blinky.o: blinky.s  nbproject/Makefile-${CND_CONF}.mk 
 	@${MKDIR} "${OBJECTDIR}" 
@@ -109,6 +117,14 @@ ${OBJECTDIR}/blinky.o: blinky.s  nbproject/Makefile-${CND_CONF}.mk
 	${MP_AS} -mcpu=PIC16F1789 -c \
 	-o ${OBJECTDIR}/blinky.o \
 	blinky.s \
+	 -msummary=+mem,-psect,-class,-hex,-file,-sha1,-sha256,-xml,-xmlfull -fmax-errors=20 -mwarn=0 -xassembler-with-cpp
+	
+${OBJECTDIR}/adc.o: adc.s  nbproject/Makefile-${CND_CONF}.mk 
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/adc.o 
+	${MP_AS} -mcpu=PIC16F1789 -c \
+	-o ${OBJECTDIR}/adc.o \
+	adc.s \
 	 -msummary=+mem,-psect,-class,-hex,-file,-sha1,-sha256,-xml,-xmlfull -fmax-errors=20 -mwarn=0 -xassembler-with-cpp
 	
 endif
