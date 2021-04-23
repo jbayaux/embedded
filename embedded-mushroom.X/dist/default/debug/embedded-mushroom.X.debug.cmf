@@ -12,7 +12,7 @@
 # in delta units.  Any other numeric values are decimal.
 %PSECTS
 $build/default/debug/flash_test.o
-text CODE 0 0 0 80 2
+text CODE 0 0 0 7A 2
 config CONFIG 4 8007 8007 2 2
 # %UNUSED Section
 # This section enumerates the unused ranges of each CLASS. Each entry
@@ -56,8 +56,8 @@ BANK6 320-36F 1
 BANK7 3A0-3EF 1
 BANK8 420-46F 1
 BANK9 4A0-4EF 1
-CONST 80-3FFF 2
-ENTRY 80-3FFF 2
+CONST 7A-3FFF 2
+ENTRY 7A-3FFF 2
 IDLOC 8000-8003 2
 SFR10 500-51F 1
 SFR11 580-59F 1
@@ -81,7 +81,7 @@ SFR28 E00-E6F 1
 SFR29 E80-EEF 1
 SFR30 F00-F6F 1
 SFR31 F80-FEF 1
-CODE 80-3FFF 2
+CODE 7A-3FFF 2
 SFR2 100-11F 1
 SFR3 180-19F 1
 SFR4 200-21F 1
@@ -109,8 +109,8 @@ BANK25 CA0-CBF 1
 BIGRAM 2000-27EF 1
 COMMON 70-7F 1
 EEDATA F000-F0FF 2
-STRCODE 80-3FFF 2
-STRING 80-3FFF 2
+STRCODE 7A-3FFF 2
+STRING 7A-3FFF 2
 # %LINETAB Section
 # This section enumerates the file/line to address mappings.
 # The beginning of the section is indicated by %LINETAB.
@@ -142,7 +142,7 @@ E text CODE >46:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 F text CODE >47:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 10 text CODE >48:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 11 text CODE >49:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-12 text CODE >51:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+12 text CODE >50:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 13 text CODE >52:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 14 text CODE >53:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 15 text CODE >54:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
@@ -191,23 +191,23 @@ F text CODE >47:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 40 text CODE >130:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 41 text CODE >131:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 42 text CODE >132:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-43 text CODE >133:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-44 text CODE >134:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+43 text CODE >135:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+44 text CODE >136:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 45 text CODE >137:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-46 text CODE >138:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-47 text CODE >139:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-48 text CODE >141:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-49 text CODE >142:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4A text CODE >144:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4B text CODE >145:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+46 text CODE >139:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+47 text CODE >140:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+48 text CODE >142:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+49 text CODE >143:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+4A text CODE >147:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+4B text CODE >148:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 4C text CODE >149:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4D text CODE >150:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-4E text CODE >151:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+4D text CODE >152:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+4E text CODE >153:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 4F text CODE >154:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 50 text CODE >155:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 51 text CODE >156:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-52 text CODE >157:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-53 text CODE >158:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+52 text CODE >160:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+53 text CODE >161:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 54 text CODE >162:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 55 text CODE >163:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 56 text CODE >164:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
@@ -219,39 +219,33 @@ F text CODE >47:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 5C text CODE >170:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 5D text CODE >171:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 5E text CODE >172:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-5F text CODE >173:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-60 text CODE >174:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+5F text CODE >176:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+60 text CODE >177:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 61 text CODE >178:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-62 text CODE >179:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-63 text CODE >180:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+62 text CODE >181:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+63 text CODE >182:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 64 text CODE >183:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 65 text CODE >184:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 66 text CODE >185:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 67 text CODE >186:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 68 text CODE >187:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 69 text CODE >188:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6A text CODE >189:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6B text CODE >190:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6C text CODE >191:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-6D text CODE >192:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+6A text CODE >191:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+6B text CODE >192:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+6C text CODE >193:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+6D text CODE >194:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 6E text CODE >195:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 6F text CODE >196:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 70 text CODE >197:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 71 text CODE >198:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-72 text CODE >199:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-73 text CODE >200:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-74 text CODE >201:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-75 text CODE >202:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-76 text CODE >203:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-77 text CODE >204:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+72 text CODE >201:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+73 text CODE >202:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+74 text CODE >203:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+75 text CODE >204:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+76 text CODE >205:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
+77 text CODE >206:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 78 text CODE >207:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 79 text CODE >208:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-7A text CODE >209:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-7B text CODE >210:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-7C text CODE >211:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-7D text CODE >212:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-7E text CODE >213:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
-7F text CODE >214:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 # %SYMTAB Section
 # An enumeration of all symbols in the program.
 # The beginning of the section is indicated by %SYMTAB.
@@ -264,7 +258,7 @@ F text CODE >47:/home/amalherbe/MPLABXProjects/embedded-mushroom.X/flash_test.s
 # was defined in a psect then <psect> will be "-". File-name
 # is the name of the object file in which the symbol was defined.
 %SYMTAB
-__Hspace_0 80 0 ABS 0 - -
+__Hspace_0 7A 0 ABS 0 - -
 __Hspace_1 0 0 ABS 0 - -
 __Hspace_3 0 0 ABS 0 - -
 __Hspace_4 10010 0 ABS 0 - -

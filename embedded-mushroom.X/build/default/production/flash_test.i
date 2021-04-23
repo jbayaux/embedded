@@ -10345,11 +10345,11 @@ start:
 ;INITIALISATION
 initialisation:
     ; Configuration of Flash modules pins
-    banksel TRISA
-    bcf TRISA, 5 ; Set ~SS pin to output mode
+    banksel TRISC
     bcf TRISC, 3 ; Set SCK pin to ouptut mode
     bcf TRISC, 5 ; Set SDO pin to output mode
     bsf TRISC, 4 ; Set SDI pin to input mode
+    bcf TRISD, 0 ; Set ~SS pin to ouptut mode
     bcf TRISD, 4 ; Set ((PORTD) and 07Fh), 4 pin to output (SPI HLD)
     bcf TRISD, 5 ; Set ((PORTD) and 07Fh), 5 pin to output (SPI WP)
 
@@ -10358,12 +10358,12 @@ initialisation:
     ; SCK frequency
     ; Default = 00000010B
     ; Custom = 00001010B
+    banksel SSP1CON1
     movlw 00000010B ; Enable Serial port pins, ((SSP1CON1) and 07Fh), 4 bit to 1 and SCK freq = F_osc / 64
     movwf SSP1CON1
     movlw 8fh ; Set SCK frequency to F_osc / (143 + 1) / 4
     movwf SSP1ADD
 
-    banksel SSP1STAT
     bcf SSP1STAT, 6 ; Set ((SSP1STAT) and 07Fh), 6 bit to 0 (Clock Edge for SPI)
     bsf SSP1CON1, 4 ; Set ((SSP1CON1) and 07Fh), 4 bit to 1 (Clock polarity for SPI)
     bsf SSP1CON1, 5 ; Enable Serial port pins
@@ -10371,7 +10371,7 @@ initialisation:
     banksel PORTD
     bcf PORTD, 4 ; Set ~HLD signal to 1
     bcf PORTD, 5 ; Set ~WP signal to 1
-    bsf PORTA, 5 ; Initialize ~SS to 1
+    bsf PORTD, 0 ; Initialize ~SS to 1
 
     ; Configuration of internal clock
     banksel OSCCON
@@ -10434,6 +10434,7 @@ interrupt_routines:
 spi_completion:
     bcf PIR1, 3
     movlb 04h
+    movf data_count, 0
     decfsz data_count
     goto refresh_buf
     movlb 00h
@@ -10453,6 +10454,7 @@ timer1_handler:
     btfsc next, 0
     goto enable_next_task
 
+    bsf next, 0
     bsf task_flags, 1 ; Start recurrent task
     ; Bit 1 : Write enable
     ; Bit 2 : Read status 1
@@ -10463,6 +10465,7 @@ timer1_handler:
 
 enable_next_task:
     bsf task_flags, 2
+    bcf next, 0
     movlw 12h
     movwf counter
     return
@@ -10486,12 +10489,13 @@ main_loop:
 ; Flash module operations
 clear_flash:
     bcf task_flags, 0
-    bsf PORTA, 5 ; Deselect flash
+    bsf PORTD, 0 ; Deselect flash
     return
 
 enable_write:
     bcf task_flags, 1
-    bcf PORTA, 5 ; Select flash
+    bcf PORTD, 0 ; Select flash
+    call my_nop
     banksel SSP1BUF
     movlw 06h ; WRITE ENABLE instruction code
     movwf SSP1BUF ; send_instruction
@@ -10501,9 +10505,10 @@ enable_write:
 
 read_status1:
     bcf task_flags, 2
-    bcf PORTA, 5
+    bcf PORTD, 0
+    call my_nop
     banksel SSP1BUF
-    movlw 05h ; Register Status
+    movlw 70h ; Register Status 05h, Flag status 70h
     movwf SSP1BUF
     movlw 02h ; 2 bits exchanged
     movwf data_count
@@ -10511,10 +10516,24 @@ read_status1:
 
 read_status2:
     bcf task_flags, 3
-    bcf PORTA, 5
+    bcf PORTD, 0
     banksel SSP1BUF
     movlw 70h ; Flag Status
     movwf SSP1BUF
     movlw 03h ; 3 bits exchanged
     movwf data_count
     return
+
+my_nop:
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
