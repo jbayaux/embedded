@@ -5,8 +5,8 @@
 ;                    the interrupt handler.                   ;
 ;                                                             ;
 ;               INFO0064 - Embedded Systems - Lab 2           ;
-;              Antoine Malherbe  -  Chloé Preud'Homme         ;
-;                 Jérôme Bayaux  -  Tom Piron                 ;
+;              Antoine Malherbe  -  Chloï¿½ Preud'Homme         ;
+;                 Jï¿½rï¿½me Bayaux  -  Tom Piron                 ;
 ;                                                             ;
 ; *********************************************************** ;
 
@@ -130,10 +130,13 @@ initialisation:
                                     ; Bit 7 : Light
 
     next_data             EQU 21h
-    next_address_byte1    EQU 22h
-    next_address_byte2    EQU 23h
-    next_address_byte3    EQU 24h
-    flash_status2         EQU 25h   ; Bit 0 : High or low part of data, 0 means "high"
+    next_address_byte_write1    EQU 22h
+    next_address_byte_write2    EQU 23h
+    next_address_byte_write3    EQU 24h
+    next_address_byte_read1    EQU 25h
+    next_address_byte_read2    EQU 26h
+    next_address_byte_read3    EQU 27h
+    flash_status2         EQU 28h   ; Bit 0 : High or low part of data, 0 means "high"
                                     ; Bit 1 : Read mode
                                     ; Bit 2 : Next data is bullshit
 				    ; Bit 3 : Still something to read
@@ -150,9 +153,12 @@ initialisation:
     movwf    flash_status
     movwf    flash_status2
     movwf    next_data
-    movwf    next_address_byte1
-    movwf    next_address_byte2
-    movwf    next_address_byte3
+    movwf    next_address_byte_write1
+    movwf    next_address_byte_write2
+    movwf    next_address_byte_write3
+    movwf    next_address_byte_read1
+    movwf    next_address_byte_read2
+    movwf    next_address_byte_read3
     return
 
 ;INTERRUPT ROUTINES
@@ -191,7 +197,7 @@ write_data:
     return
 
 save_data:
-    movf     SSP1BUF, 0		    ; ?? Remove and send full bullshit ??
+    movf     SSP1BUF, 0
     movwf    SSP1BUF                ; Relaunch a data cycle
     movlb    00h
     bsf      task_flags2, 1         ; Use the extracted data
@@ -343,13 +349,10 @@ enable_write:
     
 store_data:
 ; Store the last measurement on the flash memory
-    ; TODO? This in clear_flash ? + Launch the task if cleared
     banksel  PORTD
     bsf      PORTD, 0               ; Deselect flash module to apply WRITE ENABLED COMMAND
+    nop                             ; Wait for the slave deselect to be seen by the flash memory ?
     nop
-    nop
-    nop
-    ; TODO? : Wait for the slave deselect to be seen by the flash memory ?
     bcf      PORTD, 0               ; Select flash
     banksel  SSP1BUF
     movlw    02h                    ; PROGRAM command
@@ -387,21 +390,21 @@ compute_next_data_write:
     return
 
 address_byte1:
-    movf     next_address_byte1, 0
+    movf     next_address_byte_write1, 0
     movwf    next_data
     bcf      flash_status, 1
     bsf      flash_status, 5
     return
 
 address_byte2:
-    movf     next_address_byte2, 0
+    movf     next_address_byte_write2, 0
     movwf    next_data
     bcf      flash_status, 2
     bsf      flash_status, 1
     return
 
 address_byte3:
-    movf     next_address_byte3, 0
+    movf     next_address_byte_write3, 0
     movwf    next_data
     bcf      flash_status, 3
     bsf      flash_status, 2
@@ -481,21 +484,21 @@ compute_next_data_read:
 
 address_byte1_read:
     bcf      flash_status, 1
-    movlw    00h                    ; TODO: Retrieve the next read address 1
+    movf     next_address_byte_read1, 0
     movwf    next_data
     bsf      flash_status, 5        ; Next SPI completion means that we will start to read
     return
 
 address_byte2_read:
     bcf      flash_status, 2
-    movlw    00h                    ; TODO: Retrieve the next read address 2
+    movf     next_address_byte_read2, 0
     movwf    next_data
     bsf      flash_status, 1
     return
 
 address_byte3_read:
     bcf      flash_status, 3
-    movlw    00h                    ; TODO: Retrieve the next read address 3
+    movf     next_address_byte_read3, 0
     movwf    next_data
     bsf      flash_status, 2
     return
@@ -503,7 +506,6 @@ address_byte3_read:
 clear_flash:
     bcf      task_flags, 6
     bsf      PORTD, 0               ; Deselect flash
-
     ; If the flash was writing data, we need to increment the writing
     ; address for the next write operation
     movlb    04h
@@ -513,17 +515,24 @@ clear_flash:
 
 clear_read:
     bcf	     flash_status2, 1
-    ; TODO: Update read address
+    movlb    04h
+    movlw    00000000B
+    movwf    next_address_byte_write1
+    movwf    next_address_byte_write2
+    movwf    next_address_byte_write3
+    movwf    next_address_byte_read1
+    movwf    next_address_byte_read2
+    movwf    next_address_byte_read3
     return
 
 update_next_address:
     movlw    08h
-    addwf    next_address_byte1, 1
+    addwf    next_address_byte_write1, 1
     movlw    00h
     ; If the addition leads to an overflow, the Carry bit is set to 1
     ; 'addwfc' add the carry to the result of the next addition
-    addwfc   next_address_byte2, 1
-    addwfc   next_address_byte3, 1
+    addwfc   next_address_byte_write2, 1
+    addwfc   next_address_byte_write3, 1
     movlb    00h
     bsf      task_flags2, 0         ; TO REMOVE !!! Trigger a read operation
     return
@@ -531,8 +540,13 @@ update_next_address:
 read_data:
 ; Start a READ operation from the flash
 ; Will be triggered by a connection from Bluetooth
-    ; TODO: Check whether there is something to read or not
     bcf      task_flags2, 0
+    ; Check whether there is something to read or not
+    call check_if_read
+    btfsc    STATUS, 2
+    return
+
+    movlb    00h
     bcf      PORTD, 0               ; Select flash
     movlb    04h
     bsf      flash_status2, 3       ; Tell that there is still something to read
@@ -545,19 +559,51 @@ read_data:
     bsf      task_flags, 5          ; Compute next data to write
     return
 
+check_if_read:
+    movlb    04h
+    movf     next_address_byte_write1, 0
+    xorlw    00h
+    btfss    STATUS, 2
+    return
+    movf     next_address_byte_write2, 0
+    xorlw    00h
+    btfss    STATUS, 2
+    return
+    movf     next_address_byte_write3, 0
+    xorlw    00h
+    return
+
 use_data:
 ; Data has been exchanged through SPI and now need to be read
 ; Exchanged data can be found in SSP1BUF
     bcf      task_flags2, 1
-    ; TODO: Increment address_read
     movlb    04h
+    ; Increment address_read
+    movlw    01h
+    addwf    next_address_byte_read1, 1
+    movlw    00h
+    ; If the addition leads to an overflow, the Carry bit is set to 1
+    ; 'addwfc' add the carry to the result of the next addition
+    addwfc   next_address_byte_read2, 1
+    addwfc   next_address_byte_read3, 1
     btfsc    flash_status2, 2
     goto     bullshit_data
     
     ; TODO: Send data from SSP1BUF into Bluetooth but !!timing
     movf     SSP1BUF, 0
 
-    ; TODO: If address_read = address write
+    ; Check if address_read = address write
+    movf     next_address_byte_write1, 0
+    xorwf    next_address_byte_read1, 0
+    btfss    STATUS, 2
+    return
+    movf     next_address_byte_write2, 0
+    xorwf    next_address_byte_read2, 0
+    btfss    STATUS, 2
+    return
+    movf     next_address_byte_write3, 0
+    xorwf    next_address_byte_read3, 0
+    btfsc    STATUS, 2
     bcf      flash_status2, 3       ; Tell that there is nothing left to read
     return
 
