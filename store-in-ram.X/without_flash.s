@@ -12,10 +12,10 @@
     processor	 16f1789
     #include     "config.inc"
     #define      measure_counter    0x10
-    #define      base_address_high  0x90
-    #define      base_address_low   0x00
-    #define      max_address_high   0x90
-    #define      max_address_low    0x50
+    #define      base_address_high  0x20
+    #define      base_address_low   0x50
+    #define      max_address_high   0x29
+    #define      max_address_low    0xb0
 
     PSECT text, abs, class=CODE, delta=2
     
@@ -44,7 +44,7 @@ initialisation:
     bsf      ANSELB, 4              ; Set input mode of RB4 to analog
     banksel  WPUA
     bcf      WPUA, 0                ; Disable weak pull-up on RA0
-    ; bcf      WPUA, 1                ; Disable weak pull-up on RA1
+    bcf      WPUA, 1                ; Disable weak pull-up on RA1
     bcf      WPUB, 4                ; Disable weak pull-up on RB4
 
     ; Configuration of ADC
@@ -199,8 +199,8 @@ get_luminosity:
     btfsc    ADCON0, 1              ; Test if ADC already used
     return
     
-    ; movlw    00000101B              ; ADC enabled and AN1 selected as source
-    ; movwf    ADCON0
+    movlw    00000101B              ; ADC enabled and AN1 selected as source
+    movwf    ADCON0
     call     wait_acquisition
     bsf      ADCON0, 1              ; Set ADC Conversion Status bit
                                     ; to start conversion
@@ -215,18 +215,23 @@ wait_acquisition:                   ; Wait for acquisition (6 us)
 
 check_empty_space:
     bcf      task_flags, 3
-    bsf	     task_flags, 4
+    bsf	     task_flags, 4	    ; To remove when Bluetooth is configured
     movf     FSR0H, 0
     xorlw    max_address_high
     btfss    STATUS, 2
-    return
+    goto     end_check
     movf     FSR0L, 0
     xorlw    max_address_low
     btfsc    STATUS, 2
     bsf      status_flags, 0
+    goto     end_check
     return
 
-; Task triggered by a bluetooth connection
+end_check:
+    ; sleep			    ; To remove when Bluetooth managed
+    return
+
+; Task triggered by a Bluetooth connection
 try_read:
     ; Check read = write address
     movf     current_address_write_high, 0
