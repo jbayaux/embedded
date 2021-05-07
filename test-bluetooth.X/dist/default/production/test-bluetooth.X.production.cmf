@@ -12,7 +12,7 @@
 # in delta units.  Any other numeric values are decimal.
 %PSECTS
 $build/default/production/blinky.o
-text CODE 0 0 0 39 2
+text CODE 0 0 0 1007 2
 config CONFIG 4 8007 8007 2 2
 # %UNUSED Section
 # This section enumerates the unused ranges of each CLASS. Each entry
@@ -56,41 +56,10 @@ BANK6 320-36F 1
 BANK7 3A0-3EF 1
 BANK8 420-46F 1
 BANK9 4A0-4EF 1
-CONST 39-3FFF 2
-ENTRY 39-3FFF 2
+CONST 1007-3FFF 2
+ENTRY 1007-3FFF 2
 IDLOC 8000-8003 2
-SFR10 500-51F 1
-SFR11 580-59F 1
-SFR12 600-61F 1
-SFR13 680-69F 1
-SFR14 700-71F 1
-SFR15 780-79F 1
-SFR16 800-81F 1
-SFR17 880-89F 1
-SFR18 900-91F 1
-SFR19 980-99F 1
-SFR20 A00-A1F 1
-SFR21 A80-A9F 1
-SFR22 B00-B1F 1
-SFR23 B80-B9F 1
-SFR24 C00-C1F 1
-SFR25 C80-C9F 1
-SFR26 D00-D6F 1
-SFR27 D80-DEF 1
-SFR28 E00-E6F 1
-SFR29 E80-EEF 1
-SFR30 F00-F6F 1
-SFR31 F80-FEF 1
-CODE 39-3FFF 2
-SFR1 80-9F 1
-SFR2 100-11F 1
-SFR3 180-19F 1
-SFR4 200-21F 1
-SFR5 280-29F 1
-SFR6 300-31F 1
-SFR7 380-39F 1
-SFR8 400-41F 1
-SFR9 480-49F 1
+CODE 1007-3FFF 2
 BANK10 520-56F 1
 BANK11 5A0-5EF 1
 BANK12 620-66F 1
@@ -107,11 +76,11 @@ BANK22 B20-B6F 1
 BANK23 BA0-BEF 1
 BANK24 C20-C6F 1
 BANK25 CA0-CBF 1
-BIGRAM 2000-27EF 1
+BIGRAM 200E-27EF 1
 COMMON 70-7F 1
 EEDATA F000-F0FF 2
-STRCODE 39-3FFF 2
-STRING 39-3FFF 2
+STRCODE 1007-3FFF 2
+STRING 1007-3FFF 2
 # %LINETAB Section
 # This section enumerates the file/line to address mappings.
 # The beginning of the section is indicated by %LINETAB.
@@ -126,67 +95,159 @@ STRING 39-3FFF 2
 # All other numeric values are in decimal.
 %LINETAB
 $build/default/production/blinky.o
+0 text CODE >20:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
 0 text CODE >21:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-0 text CODE >22:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-1 text CODE >24:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-4 text CODE >25:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1 text CODE >23:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+4 text CODE >24:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5 text CODE >27:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
 5 text CODE >28:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-5 text CODE >29:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-6 text CODE >30:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-7 text CODE >33:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-7 text CODE >35:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-8 text CODE >36:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-9 text CODE >37:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-A text CODE >38:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-B text CODE >39:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-C text CODE >40:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-D text CODE >41:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-E text CODE >42:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-F text CODE >43:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-10 text CODE >44:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-11 text CODE >46:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+6 text CODE >29:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7 text CODE >32:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7 text CODE >34:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+8 text CODE >35:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+9 text CODE >36:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+A text CODE >37:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+B text CODE >38:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+C text CODE >41:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+D text CODE >42:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+E text CODE >43:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+F text CODE >44:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+10 text CODE >47:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+11 text CODE >48:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
 12 text CODE >49:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
 13 text CODE >50:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
 14 text CODE >51:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
 15 text CODE >52:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-16 text CODE >53:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-17 text CODE >56:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-18 text CODE >57:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-19 text CODE >58:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-1A text CODE >59:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-1B text CODE >60:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-1C text CODE >64:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-1D text CODE >65:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-1E text CODE >66:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-1F text CODE >71:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-20 text CODE >72:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-21 text CODE >73:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-22 text CODE >74:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-23 text CODE >75:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-24 text CODE >80:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-25 text CODE >81:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-26 text CODE >82:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-27 text CODE >83:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-28 text CODE >84:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-29 text CODE >85:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-2A text CODE >88:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-2A text CODE >89:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-2B text CODE >90:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-2C text CODE >91:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-2D text CODE >92:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-2E text CODE >94:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-2E text CODE >95:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-2F text CODE >96:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-30 text CODE >97:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-31 text CODE >99:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-32 text CODE >100:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-33 text CODE >101:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-34 text CODE >103:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-35 text CODE >104:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-36 text CODE >105:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-37 text CODE >106:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-38 text CODE >109:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
-38 text CODE >110:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+16 text CODE >54:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+17 text CODE >58:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+18 text CODE >59:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+19 text CODE >60:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1A text CODE >65:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1B text CODE >66:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1C text CODE >67:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1D text CODE >68:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1E text CODE >69:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1F text CODE >70:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+20 text CODE >90:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+21 text CODE >91:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+22 text CODE >92:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+23 text CODE >93:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+24 text CODE >94:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+25 text CODE >101:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+26 text CODE >102:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+27 text CODE >103:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+28 text CODE >104:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+29 text CODE >107:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+29 text CODE >108:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+2A text CODE >109:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+2B text CODE >110:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+2C text CODE >111:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+2D text CODE >112:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+2E text CODE >113:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+2F text CODE >114:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+30 text CODE >115:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+31 text CODE >116:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+32 text CODE >117:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+33 text CODE >118:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+34 text CODE >119:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+35 text CODE >120:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+35 text CODE >121:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+36 text CODE >123:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+36 text CODE >124:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+37 text CODE >125:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+38 text CODE >126:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+39 text CODE >127:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+3A text CODE >129:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+3B text CODE >130:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+3C text CODE >131:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+3D text CODE >133:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+3D text CODE >142:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+3E text CODE >143:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+3F text CODE >144:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+40 text CODE >145:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+41 text CODE >146:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+42 text CODE >148:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+43 text CODE >149:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+44 text CODE >150:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+45 text CODE >151:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+46 text CODE >154:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+47 text CODE >155:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+48 text CODE >156:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+49 text CODE >157:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+4A text CODE >158:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+4B text CODE >159:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+4C text CODE >161:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+4D text CODE >165:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+4E text CODE >166:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+4F text CODE >167:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+50 text CODE >168:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+51 text CODE >172:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+52 text CODE >173:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+53 text CODE >174:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+54 text CODE >175:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+55 text CODE >176:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+56 text CODE >177:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+57 text CODE >178:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+57 text CODE >180:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+58 text CODE >181:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+59 text CODE >183:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5A text CODE >184:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5B text CODE >185:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5B text CODE >186:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5C text CODE >187:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5C text CODE >189:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5D text CODE >190:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5E text CODE >191:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5F text CODE >192:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+5F text CODE >194:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+60 text CODE >195:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+61 text CODE >196:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+62 text CODE >197:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+63 text CODE >198:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+64 text CODE >199:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+65 text CODE >201:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+65 text CODE >202:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+66 text CODE >203:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+67 text CODE >204:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+68 text CODE >205:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+69 text CODE >206:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+6A text CODE >207:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+6B text CODE >208:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+6C text CODE >209:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+6D text CODE >210:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+6E text CODE >211:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+6F text CODE >212:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+70 text CODE >213:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+71 text CODE >214:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+72 text CODE >215:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+73 text CODE >216:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+74 text CODE >217:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+75 text CODE >218:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+76 text CODE >219:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+77 text CODE >220:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+78 text CODE >221:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+79 text CODE >222:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7A text CODE >223:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7B text CODE >226:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7B text CODE >227:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7C text CODE >228:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7D text CODE >230:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7D text CODE >233:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7E text CODE >234:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+7F text CODE >235:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+80 text CODE >237:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+81 text CODE >238:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+82 text CODE >239:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+83 text CODE >240:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+84 text CODE >241:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+85 text CODE >242:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+86 text CODE >243:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+87 text CODE >244:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+88 text CODE >245:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+89 text CODE >248:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1000 text CODE >249:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1004 text CODE >250:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
+1004 text CODE >251:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
 # %SYMTAB Section
 # An enumeration of all symbols in the program.
 # The beginning of the section is indicated by %SYMTAB.
@@ -199,7 +260,7 @@ F text CODE >43:/home/travail/Desktop/Embedded/Projet/test-bluetooth.X/blinky.s
 # was defined in a psect then <psect> will be "-". File-name
 # is the name of the object file in which the symbol was defined.
 %SYMTAB
-__Hspace_0 39 0 ABS 0 - -
+__Hspace_0 1007 0 ABS 0 - -
 __Hspace_1 0 0 ABS 0 - -
 __Hspace_3 0 0 ABS 0 - -
 __Hspace_4 10010 0 ABS 0 - -
