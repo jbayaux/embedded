@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Lab1.X
+PROJECTNAME=mushroom-with-flash.X
 
 # Active Configuration
 DEFAULTCONF=default

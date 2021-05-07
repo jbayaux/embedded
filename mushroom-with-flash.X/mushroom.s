@@ -1,12 +1,11 @@
 ; *********************************************************** ;
-;                           BLINKY                            ;
-;       make a LED blink at a given frequency using Timer1    ;
-;         and interrupts. Turn on an other LED while in       ;
-;                    the interrupt handler.                   ;
+;                           Mushroom                          ;
+;       Collect temperature, humidity and luminosity          ;
+;             Store it into an external flash                 ;
 ;                                                             ;
-;               INFO0064 - Embedded Systems - Lab 2           ;
-;              Antoine Malherbe  -  Chlo� Preud'Homme         ;
-;                 J�r�me Bayaux  -  Tom Piron                 ;
+;               INFO2055 - Embedded Systems Project           ;
+;              Antoine Malherbe  -  Chloe Preud'Homme         ;
+;                   Jerome Bayaux  -  Tom Piron               ;
 ;                                                             ;
 ; *********************************************************** ;
 
