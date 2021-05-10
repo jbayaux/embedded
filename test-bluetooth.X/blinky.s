@@ -53,24 +53,15 @@ initialisation:
     
     bsf RC1STA, 7 ; Enables EUSART and configure pins automagically
     
-    ; Configuration of Timer1
-    ; Tune it to trigger interrupt every 5 sec
-    banksel  T1CON
-    movlw    00110001B
-    movwf    T1CON                  ; Enable timer1 with instruction clock as
-                                    ; source and prescale of 1:8
-                                    ; Frequency = (4MHz/4)/8 = 0.125MHz
-    
     ; Set interrupts on timer 1 and EUSART receive
     banksel  INTCON
     movlw    11000000B
     movwf    INTCON                 ; Enable interrupts and peripheral interrupts
     banksel  PIE1
-    movlw    00100001B
+    movlw    00100000B
     movwf    PIE1                   ; Enable EUSART receive interrupts
 
     ; Set variables locations
-    local_bank EQU 0x00 ; Bank for local variables
     int_local_bank EQU 0x01 ; Bank for interrupt local variables
  
     ; Set blue locations
@@ -93,21 +84,10 @@ initialisation:
     movwf blue_send_enabled
     movwf blue_send_counter
     
-    ; Timer1
-    timer_bank EQU 0x03
-    timer_counter EQU 0x20
-    timer_init EQU 0x04
- 
-    movlb timer_bank
-    movlw timer_init
-    movwf timer_counter
     return
 
 ;INTERRUPT ROUTINES
 interrupt_routines:
-    banksel  PIR1            
-    btfsc    PIR1, 0
-    call     timer1_handler         ; Call handler if timer1 interrupt bit set
     banksel  PIR1
     btfsc    PIR1, 5
     call     blue_receive_handler   ; Call handler when data received over bluetooth
@@ -119,17 +99,6 @@ interrupt_routines:
     call     blue_send_handler   ; Call handler when data transmitted over bluetooth
 after_send_handler:
     retfie
-
-timer1_handler:
-    bcf      PIR1, 0                ; Reset interrupt notification bit
-    movlb timer_bank
-    decfsz   timer_counter                ; Start measurements only every 5 sec
-    return
-    
-    movlb timer_bank
-    movlw    timer_init
-    movwf    timer_counter                ; Reset timer counter
-    return
 
 blue_receive_handler:
     ; Local variables declaration

@@ -23,15 +23,15 @@ OS_CURRENT="$(shell uname -s)"
 # MP_CC is not defined
 # MP_CPPC is not defined
 # MP_BC is not defined
-MP_AS="/opt/microchip/xc8/v2.32/pic-as/bin/pic-as"
-MP_LD="/opt/microchip/xc8/v2.32/pic-as/bin/pic-as"
+MP_AS="/opt/microchip/xc8/v2.31/pic-as/bin/pic-as"
+MP_LD="/opt/microchip/xc8/v2.31/pic-as/bin/pic-as"
 # MP_AR is not defined
 DEP_GEN=${MP_JAVA_PATH}java -jar "/opt/microchip/mplabx/v5.45/mplab_platform/platform/../mplab_ide/modules/../../bin/extractobjectdependencies.jar"
 # MP_CC_DIR is not defined
 # MP_CPPC_DIR is not defined
 # MP_BC_DIR is not defined
-MP_AS_DIR="/opt/microchip/xc8/v2.32/pic-as/bin"
-MP_LD_DIR="/opt/microchip/xc8/v2.32/pic-as/bin"
+MP_AS_DIR="/opt/microchip/xc8/v2.31/pic-as/bin"
+MP_LD_DIR="/opt/microchip/xc8/v2.31/pic-as/bin"
 # MP_AR_DIR is not defined
 # MP_BC_DIR is not defined
 DFP_DIR=/opt/microchip/mplabx/v5.45/packs/Microchip/PIC12-16F1xxx_DFP/1.2.63
