@@ -92,6 +92,7 @@ initialisation:
     banksel  PIE1
     movlw    01101001B
     movwf    PIE1                   ; Enable timer1, ADC, SPI and EUSART receive interrupts
+    ; TODO is bit 3 needed without the flash ?
     
     ; Declare variables in GPRs
     ; In Bank 0
@@ -106,8 +107,6 @@ initialisation:
     counter      EQU 22h
     current_address_write_low  EQU 23h
     current_address_write_high EQU 24h
-    current_address_read_low   EQU 25h
-    current_address_read_high  EQU 26h
     
     ; Initialise variables
     movlb    00h
@@ -117,35 +116,36 @@ initialisation:
     movwf    counter
     movlw    base_address_low
     movwf    current_address_write_low      ; FSR0 is used to store the actual write address
-    movwf    current_address_read_low       ; FSR1 is used to store the actual read address
     movlw    base_address_high
     movwf    current_address_write_high
-    movwf    current_address_read_high
     
     ; Set variables locations
     int_local_bank EQU 0x00 ; Bank for interrupt local variables
-    int_local_start EQU 0x2D
+    int_local_start EQU 0x2F
  
     ; Set blue locations
     blue_bank EQU 0x00
     blue_recv_counter EQU 0x27
     blue_send_enabled_addr EQU 0x20 ; Bit 5 is command get received
-    blue_send_enabled_bit EQU 0x05
+    blue_send_enabled_bit EQU 0x04
     blue_send_buffer_H EQU 0x29
     blue_send_buffer_L EQU 0x2A
-    blue_send_size EQU 0x2B
-    blue_send_counter EQU 0x2C
- 
-    ; TODO
-    blue_commands_H EQU 0x90 ; Program address 0x10XX
-    blue_helo_command_L EQU 0x00 ; Program address 0xXX00
-    blue_get_command_L EQU 0x05 ; Program address 0xXX05
+    blue_send_size_H EQU 0x2B
+    blue_send_size_L EQU 0x2C
+    blue_send_counter_H EQU 0x2D
+    blue_send_counter_L EQU 0x2E
+
+    blue_data_H EQU 0x90 ; Program address 0x10XX
+    blue_get_command_L EQU 0x00 ; Program address 0xXX00
+    blue_no_data_L EQU 0x04 ; Program address 0xXX00
+    blue_no_data_size_L EQU 0x06
  
     ; Initialize blue variables
     movlb blue_bank
     movlw 0x00
     movwf blue_recv_counter
-    movwf blue_send_counter
+    movwf blue_send_counter_H
+    movwf blue_send_counter_L
     bcf blue_send_enabled_addr, blue_send_enabled_bit
     
     return
@@ -224,7 +224,7 @@ blue_receive_handler:
     movf blue_recv_counter, 0
     addlw blue_get_command_L
     movwf FSR0L
-    movlw blue_commands_H
+    movlw blue_data_H
     movwf FSR0H
     ; Get the nth char of the get command
     moviw FSR0 ++
@@ -269,23 +269,35 @@ blue_recv_end_if:
     
 blue_send_handler:
     movlb blue_bank
-    movf blue_send_buffer_H, 0
-    movwf FSR0H
     movf blue_send_buffer_L, 0
-    addwf blue_send_counter, 0
+    addwf blue_send_counter_L, 0
     movwf FSR0L
+    movf blue_send_buffer_H, 0
+    ; If there was a carry for the low byte
+    btfsc STATUS, 0
+    incf WREG, 0
+    addwf blue_send_counter_H, 0
+    movwf FSR0H
+    
     banksel TX1REG
     moviw 0[FSR0]
     movwf TX1REG
     movlb blue_bank
-    incfsz blue_send_counter, 1
-    nop
-    movf blue_send_counter, 0
-    subwf blue_send_size, 0
+    incf blue_send_counter_L, 1
+    btfsc STATUS, 0 ; If carry
+    incf blue_send_counter_H, 1
+    movf blue_send_counter_L, 0
+    subwf blue_send_size_L, 0
+    btfss STATUS, 2
+    return
+    movf blue_send_counter_H, 0
+    subwf blue_send_size_H, 0
     btfss STATUS, 2
     return
     movlw 0x00
-    movwf blue_send_counter
+    movwf blue_send_counter_L
+    movwf blue_send_counter_H
+    call     clear_data
     banksel PIE1
     bcf PIE1, 4
     return
@@ -306,8 +318,7 @@ main_loop:
     call     check_empty_space
     movlb    00h
     btfsc    task_flags, 4
-    call     try_read
-    call blue_check_and_send
+    call     blue_send_data
     goto     main_loop
 
 ; Sensor data colection
@@ -362,7 +373,6 @@ wait_acquisition:                   ; Wait for acquisition (6 us)
 
 check_empty_space:
     bcf      task_flags, 3
-    bsf	     task_flags, 4	    ; To remove when Bluetooth is configured
     movf     FSR0H, 0
     xorlw    max_address_high
     btfss    STATUS, 2
@@ -371,65 +381,53 @@ check_empty_space:
     xorlw    max_address_low
     btfsc    STATUS, 2
     bsf      status_flags, 0
-    goto     end_check
-    return
-
 end_check:
-    ; sleep			    ; To remove when Bluetooth managed
-    return
-
-; Task triggered by a Bluetooth connection
-try_read:
-    ; Check read = write address
-    movf     current_address_write_high, 0
-    xorwf    current_address_read_high, 0
-    btfss    STATUS, 2
-    goto     read_data              ; Still smthg to read
-    movf     current_address_write_low, 0
-    xorwf    current_address_read_low, 0
-    btfsc    STATUS, 2
-    goto     clear_data
-    goto     read_data              ; Still smthg to read
-
-read_data:
-    ; Load the addresses
-    movf     current_address_read_low, 0
-    movwf    FSR1L
-    movf     current_address_read_high, 0
-    movwf    FSR1H
-    ; Increment read adresses at each step
-    ; TODO : 6 times
-    moviw    FSR1++
-    movf     FSR1L, 0
-    movwf    current_address_read_low
-    movf     FSR1H, 0
-    movwf    current_address_read_high
     return
     
 ; Clear task and reset all addresses
 clear_data:
-    bcf      task_flags, 4
     movlw    base_address_low
     movwf    current_address_write_low
-    movwf    current_address_read_low
     movlw    base_address_high
     movwf    current_address_write_high
-    movwf    current_address_read_high
+    bcf      status_flags, 0
     return
    
-blue_check_and_send:
-    ; If blue_send_enabled
-    ; end: main_blue_send_end_if
-    movlb blue_bank
-    btfss blue_send_enabled_addr, blue_send_enabled_bit
-    return
-    ; Set the indirect register to the helo command
-    movlw blue_commands_H
+blue_send_data:
+    movlb    0x00
+    ; Stop any new measure during transmition
+    bsf      status_flags, 0
+    
+    ; Set send counter to current -base
+    movlw    base_address_high
+    subwf    current_address_write_high, 0
+    movwf    blue_send_size_H
+    movlw    base_address_low
+    subwf    current_address_write_low, 0
+    movwf    blue_send_size_L
+    
+    ; If send_size == 0, send 6 times 0
+    movf     blue_send_size_L, 1
+    btfss    STATUS, 2
+    goto     size_not_zero
+    movf     blue_send_size_H, 1
+    btfss    STATUS, 2
+    goto size_not_zero
+    movlw blue_data_H
     movwf blue_send_buffer_H
-    movlw blue_helo_command_L
+    movlw blue_no_data_L
     movwf blue_send_buffer_L
-    movlw 0x05
-    movwf blue_send_size
+    movlw blue_no_data_size_L
+    movwf blue_send_size_L
+    goto activate_send
+
+size_not_zero:
+    movlw base_address_high
+    movwf blue_send_buffer_H
+    movlw base_address_low
+    movwf blue_send_buffer_L
+    
+activate_send:
     bcf blue_send_enabled_addr, blue_send_enabled_bit
     banksel PIE1
     bsf PIE1, 4
@@ -437,6 +435,6 @@ blue_check_and_send:
 
 ; Data for the program
     org 0x1000
-    db 'H', 'E', 'L', 'O', 0x0A
-    org 0x1005
     db 'G','E', 'T', 0
+    org 0x1004
+    db 0, 0, 0, 0, 0, 0
