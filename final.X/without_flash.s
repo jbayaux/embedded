@@ -90,9 +90,8 @@ initialisation:
     movlw    11000000B
     movwf    INTCON                 ; Enable interrupts and peripheral interrupts
     banksel  PIE1
-    movlw    01101001B
+    movlw    01100001B
     movwf    PIE1                   ; Enable timer1, ADC, SPI and EUSART receive interrupts
-    ; TODO is bit 3 needed without the flash ?
     
     ; Declare variables in GPRs
     ; In Bank 0
@@ -100,8 +99,7 @@ initialisation:
                                     ; Bit 1 : flag for humidity task
                                     ; Bit 2 : flag for luminosity task
                                     ; Bit 3 : flag to check empty space
-                                    ; Bit 4 : flag to read data
-				    ; Bit 5 : flag to send data through bluetooth
+                                    ; Bit 4 : flag to send data through bluetooth
     status_flags  EQU 21h           ; Bit 0 : flag to stop writing data (no more free space)
 
     counter      EQU 22h
@@ -284,7 +282,7 @@ blue_send_handler:
     movwf TX1REG
     movlb blue_bank
     incf blue_send_counter_L, 1
-    btfsc STATUS, 0 ; If carry
+    btfsc STATUS, 2 ; If carry
     incf blue_send_counter_H, 1
     movf blue_send_counter_L, 0
     subwf blue_send_size_L, 0
@@ -300,6 +298,15 @@ blue_send_handler:
     call     clear_data
     banksel PIE1
     bcf PIE1, 4
+    return
+    
+; Clear task and reset all addresses
+clear_data:
+    movlw    base_address_low
+    movwf    current_address_write_low
+    movlw    base_address_high
+    movwf    current_address_write_high
+    bcf      status_flags, 0
     return
     
 ;MAIN LOOP
@@ -384,14 +391,7 @@ check_empty_space:
 end_check:
     return
     
-; Clear task and reset all addresses
-clear_data:
-    movlw    base_address_low
-    movwf    current_address_write_low
-    movlw    base_address_high
-    movwf    current_address_write_high
-    bcf      status_flags, 0
-    return
+
    
 blue_send_data:
     movlb    0x00
