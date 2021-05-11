@@ -601,8 +601,6 @@
         <property key="memories.programmemory.ranges" value="0-3fff"/>
         <property key="memories.rww" value="true"/>
         <property key="poweroptions.powerenable" value="true"/>
-        <property key="programmerToGoFilePath"
-                  value="/home/travail/Desktop/Embedded/Projet/final.X/debug/default/store-in-ram_ptg"/>
         <property key="programmerToGoImageName" value="store-in-ram_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>

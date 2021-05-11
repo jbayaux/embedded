@@ -11,7 +11,8 @@
 
     processor	 16f1789
     #include     "config.inc"
-    #define      measure_counter    0x10
+    #define      measure_counter_L  0xB5
+    #define      measure_counter_H  0x06 ; measure every 15 min 0.202 s
     #define      base_address_high  0x20
     #define      base_address_low   0x50
     #define      max_address_high   0x29
@@ -102,7 +103,8 @@ initialisation:
                                     ; Bit 4 : flag to send data through bluetooth
     status_flags  EQU 21h           ; Bit 0 : flag to stop writing data (no more free space)
 
-    counter      EQU 22h
+    counter_L     EQU 22h
+    counter_H     EQU 28h
     current_address_write_low  EQU 23h
     current_address_write_high EQU 24h
     
@@ -110,8 +112,10 @@ initialisation:
     movlb    00h
     movlw    00000000B
     movwf    task_flags
-    movlw    measure_counter
-    movwf    counter
+    movlw    measure_counter_L
+    movwf    counter_L
+    movlw    measure_counter_H
+    movwf    counter_H
     movlw    base_address_low
     movwf    current_address_write_low      ; FSR0 is used to store the actual write address
     movlw    base_address_high
@@ -170,10 +174,22 @@ after_send_handler:
 
 timer1_handler:
     bcf      PIR1, 0                ; Reset interrupt notification bit
-    decfsz   counter                ; Start measurements only every 5 sec
+    decfsz   counter_L                ; Start measurements only every 5 sec
+    bra 0x01
+    goto timer1_counter_H_check
+    movlw 0xFF
+    xorwf counter_L, 0
+    btfsc STATUS, 2
+    decf counter_H, 1
     return
-    movlw    measure_counter
-    movwf    counter                ; Reset timer counter
+timer1_counter_H_check:
+    movf     counter_H, 1
+    btfss    STATUS, 2
+    return
+    movlw    measure_counter_L
+    movwf    counter_L
+    movlw    measure_counter_H
+    movwf    counter_H                ; Reset timer counter
     btfsc    status_flags, 0        ; Check if there is still some space available for measurements
     return
     bsf      task_flags, 0          ; Start task for temp measurement
