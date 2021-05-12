@@ -30,11 +30,16 @@ _TO BE DONE_
 ### Storage capacity
 Here are the different possible options to store the measurements alongside with the maximum consecutive time during which the station can collect some data before it needs to send it via its Bluetooth module and some additional information.
 
-Type of storage                                   | Time before out of space (with measures every 15min) | How to implement ?                                          | Best Advantage                         |
+### Storage capacity
+Here are the different possible options to store the measurements alongside with the maximum consecutive time during which the station can collect some data before it needs to send it via its Bluetooth module and some additional information.
+
+> **Note : See section 6 of [CHANGE URL](/Reports/Rapport_3_Projet_Embedded.pdf) about Memory Management to have more information.**
+
+Type of storage                                   | Time before out of space (with measures every 15min) | How to implement ?                                          | Best Advantage
 ------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------- | --------------
-2 bytes per measure in PIC16 (**_Current setup_**)| 4 days and 4 hours                                   | _Currently implemented_                                     |
-1 byte per measure in PIC16                       | 8 days and 8 hours                                   | Remove line ? to ? in [CHANGE URL](/final.X/without_flash.s)
-2 bytes per measure in Flash module               | several years                                        | Fix code of [mushroom.s](/mushroom_with_flash.X/mushroom.s)
+2 bytes per measure in PIC16 (**_Current setup_**)| 4 days and 4 hours                                   | _Currently implemented_                                     | Most accurate method without flash
+1 byte per measure in PIC16                       | 8 days and 8 hours                                   | Remove line ? to ? in [CHANGE URL](/final.X/without_flash.s)| Best space optimised
+2 bytes per measure in Flash module               | several years                                        | Fix code of [mushroom.s](/mushroom_with_flash.X/mushroom.s) | Lot of space available
 
 ### Next Steps
 1. Add some sensors
