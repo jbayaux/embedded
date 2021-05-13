@@ -110,7 +110,9 @@ initialisation:
     measure_luminosity_bit EQU 0x02 ; Bit 2 : flag for luminosity task
     measure_check_full_bit EQU 0x03 ; Bit 3 : flag to check empty space
     ; Bit 4 : flag to send data through bluetooth (see bluetooth variables)
+    ; Bit 5 : flag to sleep if there is nothing else to do (see auto_sleep)
     measure_status_flags   EQU 0x21
+
     ; Bit 0 : flag to stop writing data (no more free space)
     measure_stop_writing_bit EQU 0x00
 
@@ -168,6 +170,7 @@ initialisation:
     int_local_bank         EQU 0x00 ; Bank for interrupt local variables
     int_local_start        EQU 0x2D
 
+    auto_sleep             EQU 0x05 ; Bit 5 : flag to sleep if there is nothing to do
     return
 
 
@@ -224,6 +227,7 @@ timer1_counter_H_check:
     return
     ; Start task for temp measurement
     bsf      measure_task_flags, measure_temp_bit
+    bcf      measure_task_flags, auto_sleep        ; Stop automatic sleep
     return
 
 
@@ -408,6 +412,9 @@ main_loop:
     movlb    measure_bank
     btfsc    blue_send_enabled, blue_send_enabled_bit
     call     blue_send_data
+    movlb    measure_bank
+    btfsc    measure_task_flags, auto_sleep
+    call     sleep_if_nothing_else
     goto     main_loop
 
 
@@ -472,12 +479,28 @@ check_empty_space:
     movf     FSR0H, 0
     xorlw    measure_max_addr_H
     btfss    STATUS, 2
-    return
+    goto     enable_sleep
     movf     FSR0L, 0
     xorlw    measure_max_addr_L
     btfsc    STATUS, 2
     bsf      measure_status_flags, measure_stop_writing_bit
+    goto     enable_sleep
+
+enable_sleep:
+    ; Enable auto_sleep task
+    bsf      measure_task_flags, auto_sleep
     return
+
+
+sleep_if_nothing_else:
+    movf     measure_task_flags, 0
+    xorlw    00100000B                      ; sleep_if_nothing_else is the only task enabled
+    btfsc    STATUS, 2
+    return
+    bcf      measure_task_flags, auto_sleep
+    sleep
+    return
+
 
 blue_send_data:
     ; Stop any new measure during transmition
