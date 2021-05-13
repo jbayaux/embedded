@@ -27,13 +27,13 @@
     org      0x0004
     goto     interrupt_routines     ; jump to the interrupt routine
 
-    
+
 ;BEGINNING OF THE PROGRAM
 start:
     call     initialisation         ; initialisation routine configuring the MCU
     goto     main_loop              ; main loop
-    
-    
+
+
 ;INITIALISATION
 initialisation:
     ; configuration of the GPIO
@@ -53,20 +53,20 @@ initialisation:
     ; Configuration of ADC
     banksel  ADCON1
     ; Frequency = Fosc/4, result as sign-magnitude
-    movlw    01000000B              
+    movlw    01000000B
     movwf    ADCON1
     ; Negative ref set to VSS
-    movlw    00001111B              
+    movlw    00001111B
     movwf    ADCON2
 
     ; Configuration of clock
     banksel  OSCCON
     ; 4MHz frequency with the internal oscillator
     movlw    01101110B
-    movwf    OSCCON           
+    movwf    OSCCON
     ; No tuning of the frequency
     movlw    00000000B
-    movwf    OSCTUNE                        
+    movwf    OSCTUNE
 
     ; Configuration of Timer1
     ; Tune it to trigger interrupt every 0.524288 s
@@ -74,7 +74,7 @@ initialisation:
     ; Frequency = (4MHz/4)/8/65536 = 1.907348Hz
     banksel  T1CON
     movlw    00110001B
-    movwf    T1CON                  
+    movwf    T1CON
 
     ; Configuration of EUSART for the bluetooth module
     banksel  TX1STA
@@ -90,16 +90,16 @@ initialisation:
     movlw    0x08
     movwf    SP1BRGL
     ; Enables EUSART and configure pins automagically
-    bsf      RC1STA, 7                           
+    bsf      RC1STA, 7
 
     ; Set interrupts on timer 1, ADC and EUSART receive
     ; Enable interrupts and peripheral interrupts
     movlw    11000000B
-    movwf    INTCON    
+    movwf    INTCON
     ; Enable timer1, ADC and EUSART receive interrupts
     banksel  PIE1
     movlw    01100001B
-    movwf    PIE1                   
+    movwf    PIE1
 
     ; Declare and initialize variables
     ; Location for measurements
@@ -194,7 +194,7 @@ interrupt_routines:
 after_send_handler:
     retfie
 
-    
+
 timer1_handler:
     bcf      PIR1, 0                ; Reset interrupt notification bit
     ; Secondary counter to have time > 0.5 s between measurements
@@ -220,13 +220,13 @@ timer1_counter_H_check:
     movlw    measure_counter_init_H
     movwf    measure_counter_H
     ; Check if there is still some space available for measurements
-    btfsc    measure_status_flags, 0 
+    btfsc    measure_status_flags, 0
     return
     ; Start task for temp measurement
-    bsf      measure_task_flags, measure_temp_bit 
+    bsf      measure_task_flags, measure_temp_bit
     return
 
-    
+
 adc_completion_handler:
     bcf      PIR1, 6                ; Reset interrupt notification bit
     movf     measure_current_addr_write_L, 0
@@ -245,7 +245,7 @@ adc_completion_handler:
     movwf    measure_current_addr_write_H
     return
 
-    
+
 blue_receive_handler:
     ; Local variables declaration
     local_recv_char        EQU int_local_start + 0x00
@@ -320,7 +320,7 @@ blue_recv_end_if:
     movf     local_FSR0H, 0
     movwf    FSR0H
     return
-    
+
 
 blue_send_handler:
     ; Local variables declaration
@@ -390,7 +390,7 @@ clear_data:
     bcf      measure_status_flags, measure_stop_writing_bit
     return
 
-    
+
 ;MAIN LOOP
 main_loop:
     movlb    measure_bank
@@ -410,7 +410,7 @@ main_loop:
     call     blue_send_data
     goto     main_loop
 
-    
+
 ; Sensor data colection
 get_temp:
     banksel  ADCON0
@@ -427,7 +427,7 @@ get_temp:
     bsf      measure_task_flags, measure_humidity_bit
     return
 
-    
+
 get_humidity:
     banksel  ADCON0
     btfsc    ADCON0, 1              ; Test if ADC already used
@@ -443,7 +443,7 @@ get_humidity:
     bsf      measure_task_flags, measure_luminosity_bit
     return
 
-    
+
 get_luminosity:
     banksel  ADCON0
     btfsc    ADCON0, 1              ; Test if ADC already used
@@ -459,13 +459,13 @@ get_luminosity:
     bsf      measure_task_flags, measure_check_full_bit
     return
 
-    
-wait_acquisition:                           
+
+wait_acquisition:
     ; Wait for acquisition (6 us)
     nop
     return
 
-    
+
 check_empty_space:
     ; Check if there is still space to store future measurements
     bcf      measure_task_flags, measure_check_full_bit
