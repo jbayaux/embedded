@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>store-in-ram</name>
+            <name>mushroom</name>
             <creation-uuid>bf3edf12-3368-4177-ae42-45d8cf6524a1</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions/>
