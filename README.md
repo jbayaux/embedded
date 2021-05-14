@@ -14,7 +14,7 @@ Our priority was focused on making sure that the temperature, humidity and light
 
 * _Reports_
   * folder containing all reports
-* _Schema_
+* _Schematics_
   * folder containing all electronic schematics
 * _Datasheets_
   * folder containing all datasheets of the components used
