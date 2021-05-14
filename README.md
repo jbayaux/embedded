@@ -37,7 +37,7 @@ Here are the different possible options to store the measurements alongside with
 Type of storage                                   | Time before out of space (with measures every 15min) | How to implement ?                                          | Best Advantage
 ------------------------------------------------- | ---------------------------------------------------- | ----------------------------------------------------------- | --------------
 2 bytes per measure in PIC16 (**_Current setup_**)| 4 days and 4 hours                                   | _Currently implemented_                                     | Most accurate method without Flash Module
-1 byte per measure in PIC16                       | 8 days and 8 hours                                   | Remove line 239 and 240 in [main.s](/final.X/main.s)| Best space optimised
+1 byte per measure in PIC16                       | 8 days and 8 hours                                   | Remove line 243 and 244 in [main.s](/final.X/main.s)| Best space optimised
 2 bytes per measure in Flash module               | several years                                        | Fix code of [mushroom.s](/mushroom_with_flash.X/mushroom.s) | Lot of space available
 
 ### Next Steps
